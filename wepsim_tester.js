@@ -185,7 +185,7 @@
 	    var reg_pc_before = sim_states["REG_PC"].value - 4 ;
 	    var code_begin = parseInt(segments['.text'].begin) ;
 	    var code_end   = parseInt(segments['.text'].end) ;
-	    while ( (reg_pc != reg_pc_before) && (reg_pc < code_end) && (reg_pc > code_begin) )
+	    while ( (reg_pc != reg_pc_before) && (reg_pc < code_end) && (reg_pc >= code_begin) )
 	    {
 	       execute_microprogram() ;
 
