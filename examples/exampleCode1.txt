@@ -1,19 +1,20 @@
 .data
-	age1:    .word   30, 20      
-	age2:    .word   20 , 10
-	resultado: .word 0
-	# 32-bit word initialized with decimal
-	texto: .ascii "Hola\t"
-	texto2: .asciiz "Hola\t"
-	hueco: .space 16
+         w1: .byte 1, -1, 07, 0xa, 'a'
+             .half 1, -1, 07, 0xa, 'a'
+             .word 1, -1, 07, 0x12345678, 'a'
+         w2: .ascii  "hello"
+             .asciiz "world"
+         w3: .space 5
+
 .text
-.globl main
-main:   lw  $1 age1
-        lw  $2 age2
-        add $4 $1 $2
-        sw  $4 resultado
-        in  $6 0x0104
-        in  $5 0x0100
-        li  $7 97
-        out $7 0x1000
+main:
+            # test add
+           li  $2 2
+           li  $3 1
+           add $5 $2 $3
+
+            # test sub
+           li  $2 2
+           li  $3 1
+           sub $5 $2 $3
 

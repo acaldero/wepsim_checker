@@ -1,3 +1,32 @@
+.kdata
+   vector:  .word rti0
+            .word rti1
+            .word rtinEx
+
+   msgi0:   .asciiz "Interruption 0."
+   msgi1:   .asciiz "Interruption 1."
+   msginEx: .asciiz "Bad instruction code."
+
+.ktext
+printStr:   lb   $27 ($26)
+            li   $1 0
+            beq  $27 $1 fin1
+            out  $27 0x1000
+            li   $1 1
+            add  $26 $26 $1
+            b  printStr
+      fin1: reti
+
+  rti0:     la   $26 msgi0
+            b    printStr
+
+  rti1:     la   $26 msgi1
+            b    printStr
+
+  rtinEx:   la   $26 msginEx
+            b    printStr
+
+
 .data
          w1: .byte 1, -1, 07, 0xa, 'a'
              .half 1, -1, 07, 0xa, 'a'

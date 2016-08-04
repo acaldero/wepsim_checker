@@ -20,24 +20,6 @@
 
 
     //
-    //  Init (without UI)
-    //
-
-    function init_noui ()
-    {
-            // 1.- it checks if everything is ok
-            load_check() ;
-
-            // 2.- display the information holders
-            init_states("") ;
-            init_rf("") ;
-
-            init_stats("") ;
-            init_io("") ;
-    }
-
-
-    //
     //  Auxiliar UI
     //
 
@@ -197,12 +179,12 @@
 	    update_memories(SIMWARE) ;
 
             // execute firmware-assembly
-	    init_noui() ;
+            init("","","","");
 	    reset() ;
 	    var reg_pc        = sim_states["REG_PC"].value ;
 	    var reg_pc_before = sim_states["REG_PC"].value - 4 ;
-	    var code_begin = parseInt(segments['code'].begin) ;
-	    var code_end   = parseInt(segments['code'].end) ;
+	    var code_begin = parseInt(segments['.text'].begin) ;
+	    var code_end   = parseInt(segments['.text'].end) ;
 	    while ( (reg_pc != reg_pc_before) && (reg_pc < code_end) && (reg_pc > code_begin) )
 	    {
 	       execute_microprogram() ;
@@ -311,8 +293,8 @@
 
                  var diff = new Object() ;
                  diff.expected  = expected_result.registers[index] ;
-                 diff.obtained  = sim_states['BR'][index] ; 
-                 diff.equals    = (expected_result.registers[index] == sim_states['BR'][index]) ;
+                 diff.obtained  = get_value(sim_states['BR'][index]) ; 
+                 diff.equals    = (expected_result.registers[index] == get_value(sim_states['BR'][index])) ;
                  diff.elto_type = "register" ;
                  diff.elto_id   = reg ;
                  result.push(diff) ;
