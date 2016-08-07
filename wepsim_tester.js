@@ -137,7 +137,8 @@
 		"    <a href='#' " + 
 		"       onclick=\"$('#IF').popup('open');" + 
 		"                 var firm=$('#LF"+i+"').text();" + 
-		"                 $('#LF').html('<pre>'+firm+'</pre>');\""+
+		"                 $('#LF').html('<div style=\\'overflow:auto\\'><pre>'+firm+'</pre><div>');"+
+		"                 $('#LF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RL" + i + "'>NONE</div></a>" + 
 		"</td>" +
@@ -149,7 +150,8 @@
 		"                 var firm_json=$('#BF"+i+"').text();" + 
 		"                 if (firm_json == '') return;" + 
 		"                 var firm = JSON.parse(firm_json);" +
-		"                 show_firm_result('#BF', firm);\"" +
+		"                 show_firm_result('#BF', firm);" +
+		"                 $('#BF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RUC" + i + "'>NONE</div></a>" + 
 		"</td>" +
@@ -161,7 +163,8 @@
 		"                 var asm_json=$('#EF"+i+"').text();" + 
 		"                 if (asm_json == '') return;" + 
 		"                 var asm = JSON.parse(asm_json);" +
-		"                 show_asm_result('#EF', asm);\"" +
+		"                 show_asm_result('#EF', asm);" +
+		"                 $('#EF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RE" + i + "'>NONE</div></a>" + 
 		"</td>" +
@@ -173,7 +176,8 @@
 		"                 var chcklst_json=$('#XF"+i+"').text();" + 
 		"                 if (chcklst_json == '') return;" + 
 		"                 var chcklst = JSON.parse(chcklst_json);" +
-		"                 show_checklist_result('#XF', chcklst);\"" +
+		"                 show_checklist_result('#XF', chcklst);" +
+		"                 $('#XF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
