@@ -45,8 +45,7 @@
 	var SIMWARE = get_simware() ;
 
         // get the json_checklist
-	var textToConvert  = checklist_text.toLowerCase();
-        var json_checklist = read_checklist(textToConvert) ;
+        var json_checklist = read_checklist(checklist_text) ;
 
         // loop over firmwares, execute the asm code over it
 	var i=0;
@@ -388,12 +387,12 @@
         if (typeof expected_result.screen != "undefined")
         {
             var sim_screen = get_screen_content() ;
-            var sim_lines  = sim_screen.split("\n") ;
+            var sim_lines  = sim_screen.trim().split("\n") ;
             for (var line in expected_result.screen)
             {
                  var index = parseInt(line) ;
                  if (typeof sim_lines[index] == "undefined")
-                      var value = null ;
+                      var value = "" ;
                  else var value = sim_lines[index] ;
 
                  var diff = new Object() ;
