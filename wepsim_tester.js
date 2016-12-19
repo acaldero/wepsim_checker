@@ -53,6 +53,14 @@
 	var ita = $("#LF"+i);
 	while (ita.length != 0)
 	{
+            // to notify user
+            console.log('Working on the microcode/code pair... ' + i) ;
+            //$.notify({ title: '<strong>INFO</strong>', message: 'Working on the microcode/code pair... ' + i},
+            //         { type: 'success',
+            //           newest_on_top: true,
+            //           delay: 100,
+            //           placement: { from: 'top', align: 'center' } });
+
             // load firmware
 	    var ifirm = ita.text();
 	    var preSM = loadFirmware(ifirm);
@@ -86,11 +94,30 @@
             // execute firmware-assembly
             init("","","","");
 	    reset() ;
+
 	    var reg_pc        = sim_states["REG_PC"].value ;
 	    var reg_pc_before = sim_states["REG_PC"].value - 4 ;
-	    var code_begin = parseInt(segments['.text'].begin) ;
-	    var code_end   = parseInt(segments['.text'].end) ;
-	    while ( (reg_pc != reg_pc_before) && (reg_pc < code_end) && (reg_pc >= code_begin) )
+
+	    var code_begin  = 0 ;
+	    if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
+	          code_begin = parseInt(segments['.text'].begin) ;
+
+	    var code_end    = 0 ;
+	    if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
+	          code_end = parseInt(segments['.text'].end) ;
+
+	    var kcode_begin = 0 ; 
+	    if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
+	          kcode_begin = parseInt(segments['.ktext'].begin) ;
+	    var kcode_end   = 0 ; 
+	    if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
+	          kcode_end = parseInt(segments['.ktext'].end) ;
+
+	    while (
+                       (reg_pc != reg_pc_before) && 
+                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
+                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
+                  )
 	    {
 	       execute_microprogram() ;
 
