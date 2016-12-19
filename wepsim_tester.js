@@ -287,6 +287,7 @@
         var o = new Object() ;
         o.registers = new Object() ;
         o.memory    = new Object() ;
+        o.screen    = new Object() ;
 
         var lines = checklist.split("\n") ;
         for (var i=0; i<lines.length; i++)
@@ -307,6 +308,8 @@
                  o.registers[check[1]] = check[2] ;
              if (check[0].toUpperCase().trim() == "MEMORY")
                  o.memory[check[1]] = check[2] ;
+             if (check[0].toUpperCase().trim() == "SCREEN")
+                 o.screen[check[1]] = check[2] ;
         }
 
         return o ;
@@ -350,6 +353,28 @@
                  diff.equals    = (expected_result.memory[index] == value) ;
                  diff.elto_type = "memory" ;
                  diff.elto_id   = mp ;
+                 result.push(diff) ;
+
+                 if (diff.equals === false) errors++ ;
+            }
+        }
+        if (typeof expected_result.screen != "undefined")
+        {
+            var sim_screen = get_screen_content() ;
+            var sim_lines  = sim_screen.split("\n") ;
+            for (var line in expected_result.screen)
+            {
+                 var index = parseInt(line) ;
+                 if (typeof sim_lines[index] == "undefined")
+                      var value = null ;
+                 else var value = sim_lines[index] ;
+
+                 var diff = new Object() ;
+                 diff.expected  = expected_result.screen[index] ;
+                 diff.obtained  = value ;
+                 diff.equals    = (expected_result.screen[index] == value) ;
+                 diff.elto_type = "screen" ;
+                 diff.elto_id   = line ;
                  result.push(diff) ;
 
                  if (diff.equals === false) errors++ ;
