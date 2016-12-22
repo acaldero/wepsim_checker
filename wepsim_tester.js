@@ -112,6 +112,7 @@
 
         var ret = true;
 	while (
+                       (ret) &&
                        (reg_pc != reg_pc_before) && 
                      ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
                        ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
