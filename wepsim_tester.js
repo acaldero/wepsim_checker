@@ -69,7 +69,7 @@
 	{
 		$("#RUC"+i).text("KO");
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
 	}
 	$("#RUC"+i).text("OK");
@@ -83,7 +83,7 @@
 	{
 		$("#RE"+i).text("KO");
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
 	}
 	set_simware(SIMWAREaddon) ;
@@ -110,38 +110,31 @@
 	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
 	      kcode_end = parseInt(segments['.ktext'].end) ;
 
-        var clockout = 0 ;
+        var ret = true;
 	while (
-                       (clockout < 20000) &&
                        (reg_pc != reg_pc_before) && 
                      ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
                        ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
                   )
 	{
-	       execute_microprogram() ;
+	       ret = execute_microprogram(1024) ;
 
 	       reg_pc_before = reg_pc ;
 	       reg_pc = sim_states["REG_PC"].value ;
-
-               clockout++ ;
 	}
 
         // compare with expected results
-        if (clockout < 100000)
+        var obj_result = to_check(json_checklist) ;
+        if (ret == false)
         {
-                var obj_result = to_check(json_checklist) ;
-	        $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
-	        $("#RX"+i).text(obj_result.errors);
+	    obj_result.result = "<pre>ERROR: timeout</pre><br>" + obj_result.result;
+	    obj_result.errors = obj_result.errors + 1;
         }
-        else
-        {
-                var obj_result = to_check(json_checklist) ;
-	        $("#XF"+i).text(JSON.stringify("<pre>ERROR: timeout</pre><br>" + obj_result.result, null, 2));
-	        $("#RX"+i).text(obj_result.errors + 1);
-        }
+	$("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
+	$("#RX"+i).text(obj_result.errors);
 
         // next firmware
-        setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
+        setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
     }
 
     function execute_firmwares_and_asm ( checklist_text, asm_text )
