@@ -37,6 +37,111 @@
 	for (var i=0; i<mfiles.length; i++) {
 	     load_firmware_from_files_aux(mfiles, fileReader, i);
 	}
+
+        $("#pbar1").attr('aria-valuenow', 0);
+        $("#pbar1").attr('aria-valuemin', 0);
+        $("#pbar1").attr('aria-valuemax', mfiles.length);
+    }
+
+    function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
+    {
+        var neltos  = parseInt($("#pbar1").attr('aria-valuemax'));
+        var percent = Math.trunc(100*i/neltos);
+
+        // notify user
+        $("#pbar1").attr('aria-valuenow', i);
+        $("#pbar1").html(percent + '%');
+        $("#pbar1").css("width", percent + "%");
+
+        // check last element
+        if (i >= neltos) 
+            return;
+
+	var ita = $("#LF"+i);
+	if (ita.length == 0)
+            return;
+
+        // load firmware
+	var ifirm = ita.text();
+	var preSM = loadFirmware(ifirm);
+	$("#BF"+i).text(JSON.stringify(preSM));
+	if (preSM.error != null)
+	{
+		$("#RUC"+i).text("KO");
+
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
+                return;
+	}
+	$("#RUC"+i).text("OK");
+        update_memories(preSM);
+
+        // load assembly
+	var SIMWAREaddon = simlang_compile(asm_text, SIMWARE);
+	$("#EF"+i).text(JSON.stringify(SIMWAREaddon, null, 2));
+	$("#RE"+i).text("OK");
+	if (SIMWAREaddon.error != null) 
+	{
+		$("#RE"+i).text("KO");
+
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
+                return;
+	}
+	set_simware(SIMWAREaddon) ;
+	update_memories(SIMWARE) ;
+
+        // execute firmware-assembly
+        init("","","","");
+	reset() ;
+
+	var reg_pc        = sim_states["REG_PC"].value ;
+	var reg_pc_before = sim_states["REG_PC"].value - 4 ;
+
+	var code_begin  = 0 ;
+	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
+	      code_begin = parseInt(segments['.text'].begin) ;
+	var code_end    = 0 ;
+	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
+	      code_end = parseInt(segments['.text'].end) ;
+
+	var kcode_begin = 0 ; 
+	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
+	      kcode_begin = parseInt(segments['.ktext'].begin) ;
+	var kcode_end   = 0 ; 
+	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
+	      kcode_end = parseInt(segments['.ktext'].end) ;
+
+        var clockout = 0 ;
+	while (
+                       (clockout < 20000) &&
+                       (reg_pc != reg_pc_before) && 
+                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
+                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
+                  )
+	{
+	       execute_microprogram() ;
+
+	       reg_pc_before = reg_pc ;
+	       reg_pc = sim_states["REG_PC"].value ;
+
+               clockout++ ;
+	}
+
+        // compare with expected results
+        if (clockout < 100000)
+        {
+                var obj_result = to_check(json_checklist) ;
+	        $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
+	        $("#RX"+i).text(obj_result.errors);
+        }
+        else
+        {
+                var obj_result = to_check(json_checklist) ;
+	        $("#XF"+i).text(JSON.stringify("<pre>ERROR: timeout</pre><br>" + obj_result.result, null, 2));
+	        $("#RX"+i).text(obj_result.errors + 1);
+        }
+
+        // next firmware
+        setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 200);
     }
 
     function execute_firmwares_and_asm ( checklist_text, asm_text )
@@ -48,91 +153,7 @@
         var json_checklist = read_checklist(checklist_text) ;
 
         // loop over firmwares, execute the asm code over it
-	var i=0;
-	var ita = $("#LF"+i);
-	while (ita.length != 0)
-	{
-            // to notify user
-            console.log('Working on the microcode/code pair... ' + i) ;
-            //$.notify({ title: '<strong>INFO</strong>', message: 'Working on the microcode/code pair... ' + i},
-            //         { type: 'success',
-            //           newest_on_top: true,
-            //           delay: 100,
-            //           placement: { from: 'top', align: 'center' } });
-
-            // load firmware
-	    var ifirm = ita.text();
-	    var preSM = loadFirmware(ifirm);
-	    $("#BF"+i).text(JSON.stringify(preSM));
-	    if (preSM.error != null)
-	    {
-		$("#RUC"+i).text("KO");
-
-		i++;
-		ita = $("#LF"+i);
-		continue;
-	    }
-	    $("#RUC"+i).text("OK");
-            update_memories(preSM);
-
-            // load assembly
-	    var SIMWAREaddon = simlang_compile(asm_text, SIMWARE);
-	    $("#EF"+i).text(JSON.stringify(SIMWAREaddon, null, 2));
-	    $("#RE"+i).text("OK");
-	    if (SIMWAREaddon.error != null) 
-	    {
-		$("#RE"+i).text("KO");
-
-		i++;
-		ita = $("#LF"+i);
-		continue;
-	    }
-	    set_simware(SIMWAREaddon) ;
-	    update_memories(SIMWARE) ;
-
-            // execute firmware-assembly
-            init("","","","");
-	    reset() ;
-
-	    var reg_pc        = sim_states["REG_PC"].value ;
-	    var reg_pc_before = sim_states["REG_PC"].value - 4 ;
-
-	    var code_begin  = 0 ;
-	    if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
-	          code_begin = parseInt(segments['.text'].begin) ;
-
-	    var code_end    = 0 ;
-	    if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
-	          code_end = parseInt(segments['.text'].end) ;
-
-	    var kcode_begin = 0 ; 
-	    if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
-	          kcode_begin = parseInt(segments['.ktext'].begin) ;
-	    var kcode_end   = 0 ; 
-	    if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
-	          kcode_end = parseInt(segments['.ktext'].end) ;
-
-	    while (
-                       (reg_pc != reg_pc_before) && 
-                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
-                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
-                  )
-	    {
-	       execute_microprogram() ;
-
-	       reg_pc_before = reg_pc ;
-	       reg_pc = sim_states["REG_PC"].value ;
-	    }
-
-            // compare with expected results
-            var obj_result = to_check(json_checklist) ;
-	    $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
-	    $("#RX"+i).text(obj_result.errors);
-
-            // next firmware
-	    i++ ;
-	    ita = $("#LF"+i) ;
-	}
+        execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, 0) ;
     }
 
 
