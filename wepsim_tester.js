@@ -38,9 +38,20 @@
 	     load_firmware_from_files_aux(mfiles, fileReader, i);
 	}
 
+        // notify user
         $("#pbar1").attr('aria-valuenow', 0);
         $("#pbar1").attr('aria-valuemin', 0);
         $("#pbar1").attr('aria-valuemax', mfiles.length);
+    }
+
+    function add_comment ( i, stage, msg )
+    {
+	var old_msg = $("#RC" +i).text();
+        if (old_msg == "NONE")
+            old_msg = "";
+
+	$("#RC" +i).text(old_msg + "(" + stage + " error) ");
+	$("#CF" +i).text($("#CF"+i).text() + "(" + stage + ":" + msg + ") ");
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
@@ -68,6 +79,7 @@
 	if (preSM.error != null)
 	{
 		$("#RUC"+i).text("1");
+                add_comment(i, "load firmware", preSM.error);
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
@@ -82,6 +94,7 @@
 	if (SIMWAREaddon.error != null) 
 	{
 		$("#RE"+i).text("1");
+                add_comment(i, "compile assembly", SIMWAREaddon.error) ;
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
@@ -133,6 +146,9 @@
         }
 	$("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
 	$("#RX"+i).text(obj_result.errors);
+
+        if (obj_result.errors != 0)
+            add_comment(i, "execution", JSON.stringify(obj_result.result,null,2));
 
         // next firmware
         setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
@@ -222,6 +238,18 @@
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
+		"<td>" +
+		"    <div id='CF" + i + "' style='display:none;'></div>" +
+		"    <a href='#' " + 
+		"       onclick=\"$('#IC').popup('open');" + 
+		"                 $('#CF').html('<h1>NO COMMENTS</h1>');" +
+		"                 var comments=$('#CF"+i+"').text();" + 
+		"                 if (comments== '') return;" + 
+		"                 show_comments_result('#CF', comments);" +
+		"                 $('#CF').enhanceWithin();" + "\""+
+                "       data-position-to='windows' data-transition='none' " +
+		"       data-rel='popup'><div id='RC" + i + "'>NONE</div></a>" + 
+		"</td>" +
 		"</tr>" ;
 
         return o ;
@@ -286,5 +314,16 @@
             }
 
 	    $(jqDiv).html(checkreport2html(checklist)) ;
+    }   
+
+    function show_comments_result ( jqDiv, comments )
+    {
+	    if (comments == null)
+            {
+	         $(jqDiv).html('<pre>Empty</pre>') ;
+                 return;
+            }
+
+	    $(jqDiv).html(comments) ;
     }   
 
