@@ -139,16 +139,22 @@
 
         // compare with expected results
         var obj_result = to_check(json_checklist) ;
-        if (ret == false)
-        {
-	    obj_result.result = "<pre>ERROR: more than 2048 clock cycles in some instruction.</pre><br>" + obj_result.result;
-	    obj_result.errors = obj_result.errors + 1;
-        }
-	$("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
-	$("#RX"+i).text(obj_result.errors);
-
         if (obj_result.errors != 0)
             add_comment(i, "execution error:"+checkreport2txt(obj_result.result), JSON.stringify(obj_result.result,null,2));
+
+        if (ret == false)
+        {
+            var msg1 = "more than 2048 clock cycles in one single instruction.";
+            add_comment(i, "execution error: " + msg1 + "<br>", msg1);
+
+	    $("#XF"+i).text("<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2));
+	    $("#RX"+i).text(obj_result.errors + 1);
+        }
+        else
+        {
+	    $("#XF"+i).text(JSON.stringify(obj_result.result,null,2));
+	    $("#RX"+i).text(obj_result.errors);
+        }
 
         // next firmware
         setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
@@ -248,7 +254,7 @@
 		"                 show_comments_result('#CF', comments);" +
 		"                 $('#CF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RC" + i + "'>NONE</div></a>" + 
+		"       data-rel='popup'><div id='RC" + i + "'>\"NONE\"</div></a>" + 
 		"</td>" +
 		"</tr>" ;
 
