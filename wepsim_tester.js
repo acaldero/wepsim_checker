@@ -50,7 +50,7 @@
         if (old_msg == "NONE")
             old_msg = "";
 
-	$("#RC" +i).text(old_msg + "(" + stage + ") ");
+	$("#RC" +i).text(old_msg + "\"" + stage + "\" ");
 	$("#CF" +i).text($("#CF"+i).text() + "(" + msg + ") ");
     }
 
