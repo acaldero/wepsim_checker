@@ -118,19 +118,24 @@
                        ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
                   )
 	{
-	       ret = execute_microprogram(1024) ;
+	       ret = execute_microprogram(2048) ;
 
 	       reg_pc_before = reg_pc ;
 	       reg_pc = sim_states["REG_PC"].value ;
 	}
 
         // compare with expected results
-        var obj_result = to_check(json_checklist) ;
         if (ret == false)
         {
-	    obj_result.result = "<pre>ERROR: timeout</pre><br>" + obj_result.result;
+            var obj_result = to_check(json_checklist) ;
+	    obj_result.result = "<pre>ERROR: more than 2048 clock cycles in some instruction.</pre><br>" + obj_result.result;
 	    obj_result.errors = obj_result.errors + 1;
+	    $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
+	    $("#RX"+i).text(obj_result.errors);
+            return;
         }
+
+        var obj_result = to_check(json_checklist) ;
 	$("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
 	$("#RX"+i).text(obj_result.errors);
 
