@@ -47,7 +47,7 @@
     function add_comment ( i, stage, msg )
     {
 	var old_msg = $("#RC" +i).text();
-        if (old_msg == "NONE")
+        if (old_msg == "\"NONE\"")
             old_msg = "";
 
 	$("#RC" +i).text(old_msg + "\"" + stage + "\" ");
