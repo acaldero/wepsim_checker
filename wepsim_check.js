@@ -57,6 +57,21 @@
         return o ;
     }
 
+    function checkreport2txt ( checklist )
+    {
+        var o = "";
+
+        for (var i=0; i<checklist.length; i++)
+        {
+             if (checklist[i].equals === false) {
+                 o += checklist[i].elto_type + "[" + checklist[i].elto_id + "] = " + 
+                      checklist[i].obtained + " (expected " + checklist[i].expected  + ") ";
+             }
+        }
+
+        return o;
+    }
+
     function read_checklist ( checklist )
     {
         var o = new Object() ;

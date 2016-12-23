@@ -50,8 +50,8 @@
         if (old_msg == "NONE")
             old_msg = "";
 
-	$("#RC" +i).text(old_msg + "(" + stage + " error) ");
-	$("#CF" +i).text($("#CF"+i).text() + "(" + stage + ":" + msg + ") ");
+	$("#RC" +i).text(old_msg + "(" + stage + ") ");
+	$("#CF" +i).text($("#CF"+i).text() + "(" + msg + ") ");
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
@@ -79,7 +79,7 @@
 	if (preSM.error != null)
 	{
 		$("#RUC"+i).text("1");
-                add_comment(i, "load firmware", preSM.error);
+                add_comment(i, "firmware error:"+preSM.error.split("(*)")[1], preSM.error);
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
@@ -94,7 +94,7 @@
 	if (SIMWAREaddon.error != null) 
 	{
 		$("#RE"+i).text("1");
-                add_comment(i, "compile assembly", SIMWAREaddon.error) ;
+                add_comment(i, "assembly error:"+SIMWAREaddon.error.split("(*)")[1], SIMWAREaddon.error);
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
                 return;
@@ -148,7 +148,7 @@
 	$("#RX"+i).text(obj_result.errors);
 
         if (obj_result.errors != 0)
-            add_comment(i, "execution", JSON.stringify(obj_result.result,null,2));
+            add_comment(i, "execution error:"+checkreport2txt(obj_result.result), JSON.stringify(obj_result.result,null,2));
 
         // next firmware
         setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
@@ -239,7 +239,7 @@
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
-		"    <div id='CF" + i + "' style='display:none;'></div>" +
+		"    <div id='CF" + i + "' style='display:none;font-size:small;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IC').popup('open');" + 
 		"                 $('#CF').html('<h1>NO COMMENTS</h1>');" +
