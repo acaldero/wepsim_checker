@@ -125,17 +125,12 @@
 	}
 
         // compare with expected results
+        var obj_result = to_check(json_checklist) ;
         if (ret == false)
         {
-            var obj_result = to_check(json_checklist) ;
 	    obj_result.result = "<pre>ERROR: more than 2048 clock cycles in some instruction.</pre><br>" + obj_result.result;
 	    obj_result.errors = obj_result.errors + 1;
-	    $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
-	    $("#RX"+i).text(obj_result.errors);
-            return;
         }
-
-        var obj_result = to_check(json_checklist) ;
 	$("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
 	$("#RX"+i).text(obj_result.errors);
 
