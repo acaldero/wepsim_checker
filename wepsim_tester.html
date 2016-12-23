@@ -36,7 +36,7 @@
         -webkit-overflow-scrolling: touch;
     }
 
-    textarea.ui-input-text { 
+    textarea.ui-input-text {
         height: inherit !important
     }
 
@@ -73,28 +73,28 @@
 
 <div data-role="page" id="main5">
 
-        <div data-role="header" data-position="fixed" data-disable-page-zoom="false" data-theme="a">
+        <div data-role="header" data-position="fixed" data-disable-page-zoom="false" data-tap-toggle="false" data-theme="a">
 		<div id="button_bar" data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
                     <a href="#about2" data-rel="popup" data-position-to="window"><img src="images/arcos.svg" height="40"></a>
 		</div>
 	        <span class="ui-title"><b>WepSIM Checker</b> <span class="badge">1.1.0</span> </span>
 		<div id="version_bar" data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-                    <a href="#actions_panel" 
-                           class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-gear ui-btn-icon-left">Menu</a>
+                    <a href="#actions_panel"
+                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-gear ui-btn-icon-left">Menu</a>
 		</div>
         </div><!-- /header -->
 
-        <div data-role="footer" data-position="fixed" data-disable-page-zoom="false" data-theme="a">
+        <div data-role="footer" data-position="fixed" data-disable-page-zoom="false" data-tap-toggle="false" data-theme="a">
 		<div class="progress">
-		  <div id="pbar1" 
-                       class="progress-bar progress-bar-success active" role="progressbar" 
+		  <div id="pbar1"
+                       class="progress-bar progress-bar-success active" role="progressbar"
                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
 		</div>
         </div><!-- /footer -->
 
         <div role="main" class="ui-content">
 
-		<div id="lsload5" 
+		<div id="lsload5"
                      data-role="popup" data-overlay-theme="a" data-theme="a" data-dismissible="false">
 		    <div data-role="header" data-theme="a">
 		    <h1>Checklist</h1>
@@ -104,7 +104,7 @@
 			<p><input type="file" id="fileToLoad5" /></p>
 			<center>
 			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
-                        <button class="ui-btn ui-btn-b ui-btn-inline" 
+                        <button class="ui-btn ui-btn-b ui-btn-inline"
                                 onclick="var fileToLoad = document.getElementById('fileToLoad5').files[0];
 					 var fileReader = new FileReader();
 					 fileReader.onload = function (fileLoadedEvent) {
@@ -116,7 +116,7 @@
 		    </div>
 		</div>
 
-		<div id="lsload3" 
+		<div id="lsload3"
                      data-role="popup" data-overlay-theme="a" data-theme="a" data-dismissible="false">
 		    <div data-role="header" data-theme="a">
 		    <h1>Assembler</h1>
@@ -126,7 +126,7 @@
 			<p><input type="file" id="fileToLoad3" /></p>
 			<center>
 			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
-                        <button class="ui-btn ui-btn-b ui-btn-inline" 
+                        <button class="ui-btn ui-btn-b ui-btn-inline"
                                 onclick="var fileToLoad = document.getElementById('fileToLoad3').files[0];
 					 var fileReader = new FileReader();
 					 fileReader.onload = function (fileLoadedEvent) {
@@ -150,7 +150,7 @@
                         <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">Cancel</a>
                         <button class="ui-btn ui-btn-b ui-btn-inline"
                                 onclick="mfiles = document.getElementById('filesToLoad').files;
-                                         load_firmware_from_files(mfiles, '#tbmfile'); 
+                                         load_firmware_from_files(mfiles, '#tbmfile');
                                          $('#mload1').popup('close');">Load from files</button>
                         </center>
                     </div>
@@ -159,25 +159,25 @@
                 <br>
 
                 <div data-role='popup' id='IF'>
-                    <a href='#' data-rel='back' 
+                    <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
                     <div id='LF'>Firmware is not loaded.</div>
                 </div>
 
                 <div data-role='popup' id='IUC'>
-                    <a href='#' data-rel='back' 
+                    <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
                     <div id='BF'>Firmware is not micro-compiled.</div>
                 </div>
 
                 <div data-role='popup' id='IE'>
-                    <a href='#' data-rel='back' 
+                    <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
                     <div id='EF'>Firmware is not tested.</div>
                 </div>
 
                 <div data-role='popup' id='IX'>
-                    <a href='#' data-rel='back' 
+                    <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
                     <div id='XF'>Firmware is not checked.</div>
                 </div>
@@ -190,7 +190,7 @@
                  <th width=20%>&#181;compilation</th>
                  <th width=20%>Compilation &nbsp;
 			<div data-role="popup" id="show_asm_test">
-                        <a href="#" data-rel="back" 
+                        <a href="#" data-rel="back"
                            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 			<pre id=asm_test></pre>
 			</div>
@@ -198,7 +198,7 @@
 			</th>
                  <th width=20%>Execution &nbsp;
 			<div data-role="popup" id="show_checklist">
-                        <a href="#" data-rel="back" 
+                        <a href="#" data-rel="back"
                            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 			<pre id=checklist></pre>
 			</div>
@@ -222,7 +222,7 @@
 </div><!-- /page -->
 
 
-<div data-role="popup" id="about2" 
+<div data-role="popup" id="about2"
      data-theme="a" data-dismissible="false" data-animate="false" data-overlay-theme="b">
 
    <div data-role="header" data-theme="a">
@@ -241,7 +241,7 @@
             <img src="images/arcos.svg">
           </td>
           <td>
-            Copyright &copy; 2016 Alejandro Calder&oacute;n Mateos, F&eacute;lix Garc&iacute;a Carballeira, Javier Prieto Cepeda, and Sa&uacute;l Alonso Monsalve 
+            Copyright &copy; 2016 Alejandro Calder&oacute;n Mateos, F&eacute;lix Garc&iacute;a Carballeira, Javier Prieto Cepeda, and Sa&uacute;l Alonso Monsalve
           </td>
         </tr>
         <tr>
@@ -268,26 +268,27 @@
 </div><!-- /popup -->
 
 
-<div data-role="panel" id="actions_panel" 
-     data-display="overlay" data-position="right" data-theme="a" style="width:19em; min-width:18em;">
+<div data-role="panel" id="actions_panel"
+     data-display="overlay" data-animate="false" data-position="right" data-theme="a"
+     style="width:19em; min-width:18em;">
 
       <ol id="listview_2" data-role="listview" data-inset="true" data-theme="a" data-divider-theme="b">
 	    <li><a href="#mload1" style="background-color: lightgray"
-		   data-rel="popup" data-position-to="window" data-transition="pop" 
+		   data-rel="popup" data-position-to="window" data-transition="none"
                    data-inline="true"><h2>Load microcodes</h2><p>First step</p></a></li>
 
 	    <li><a href="#lsload3" style="background-color: lightgray"
-		   data-rel="popup" data-position-to="window" data-transition="pop" 
+		   data-rel="popup" data-position-to="window" data-transition="none"
                    data-inline="true"><h2>Load test</h2><p>Second step</p></a></li>
 
 	    <li><a href="#lsload5" style="background-color: lightgray"
-		   data-rel="popup" data-position-to="window" data-transition="pop" 
+		   data-rel="popup" data-position-to="window" data-transition="none"
                    data-inline="true"><h2>Load checklist</h2><p>Third step</p></a></li>
 
 	    <li><a href="#" style="background-color: lightgray"
                    onclick="var checklist_text = $('#checklist').text();
 			    var asm_text       = $('#asm_test').text();
-			    execute_firmwares_and_asm(checklist_text,asm_text);" 
+			    execute_firmwares_and_asm(checklist_text,asm_text);"
 		   data-inline="true"><h2>&#181;check</h2><p>Fourth step</p></a></li>
       </ol>
 </div>
