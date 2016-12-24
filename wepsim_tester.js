@@ -46,12 +46,15 @@
 
     function add_comment ( i, stage, msg )
     {
+	$("#CF" +i).text($("#CF"+i).text() + "(" + msg + ") ");
+
 	var old_msg = $("#RC" +i).text();
         if (old_msg == "\"NONE\"")
-            old_msg = "";
+	     $("#RC" +i).text("\"" + stage + "\" ");
+	else $("#RC" +i).text(old_msg + "\"" + stage + "\" ");
 
-	$("#RC" +i).text(old_msg + "\"" + stage + "\" ");
-	$("#CF" +i).text($("#CF"+i).text() + "(" + msg + ") ");
+	old_msg = $("#RC" +i).text().replace("\" \"",", ");
+	$("#RC" +i).text(old_msg);
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
