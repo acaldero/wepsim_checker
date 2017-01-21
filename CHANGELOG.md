@@ -1,6 +1,6 @@
 
 1.1.0 -> 1.2.0:
-* Update the wepsim engine to 1.7.5
+* Update the wepsim engine to 1.7.6
 
 1.0.8 -> 1.1.0:
 * New file deployment: tester = test + check
