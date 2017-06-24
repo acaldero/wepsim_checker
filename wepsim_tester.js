@@ -141,7 +141,7 @@
 	}
 
         // compare with expected results
-        var obj_result = to_check(json_checklist) ;
+        var obj_result = wepsim_to_check(json_checklist) ;
         if (obj_result.errors != 0)
             add_comment(i, "execution error:"+checkreport2txt(obj_result.result), JSON.stringify(obj_result.result,null,2));
 

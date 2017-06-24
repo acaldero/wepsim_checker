@@ -1,4 +1,8 @@
 
+1.2.0 -> 1.5.0:
+* Update the wepsim engine to 1.8.0
+* Minor bugfix on memory checker
+
 1.1.0 -> 1.2.0:
 * Update the wepsim engine to 1.7.5
 

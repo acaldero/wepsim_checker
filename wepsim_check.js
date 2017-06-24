@@ -23,10 +23,6 @@
     //  WepSIM check API
     //
 
-    // TODO: get checklist ready
-    // TODO: check states, memory, etc. in order to check the expected result is accommplished
-    // TODO: "register $0 >= 100"*
-
     function checkreport2html ( checklist )
     {
         var o = "" ;
@@ -105,75 +101,4 @@
         return o ;
     }   
 
-    function to_check ( expected_result )
-    {
-        var result = new Array() ;
-        var errors = 0 ;
-
-        if (typeof expected_result.registers != "undefined")
-        {
-            for (var reg in expected_result.registers)
-            {
-                 // TODO: translate $t0, ...
-                 var index = parseInt(reg) ;
-
-                 var diff = new Object() ;
-                 diff.expected  = expected_result.registers[index] ;
-                 diff.obtained  = get_value(sim_states['BR'][index]) ; 
-                 diff.equals    = (expected_result.registers[index] == get_value(sim_states['BR'][index])) ;
-                 diff.elto_type = "register" ;
-                 diff.elto_id   = reg ;
-                 result.push(diff) ;
-
-                 if (diff.equals === false) errors++ ;
-            }
-        }
-        if (typeof expected_result.memory != "undefined")
-        {
-            for (var mp in expected_result.memory)
-            {
-                 var index = parseInt(mp) ;
-                 if (typeof MP[index] == "undefined")
-                      var value = 0 ;
-                 else var value = MP[index] ;
-
-                 var diff = new Object() ;
-                 diff.expected  = expected_result.memory[index] ;
-                 diff.obtained  = value ;
-                 diff.equals    = (expected_result.memory[index] == value) ;
-                 diff.elto_type = "memory" ;
-                 diff.elto_id   = mp ;
-                 result.push(diff) ;
-
-                 if (diff.equals === false) errors++ ;
-            }
-        }
-        if (typeof expected_result.screen != "undefined")
-        {
-            var sim_screen = get_screen_content() ;
-            var sim_lines  = sim_screen.trim().split("\n") ;
-            for (var line in expected_result.screen)
-            {
-                 var index = parseInt(line) ;
-                 if (typeof sim_lines[index] == "undefined")
-                      var value = "" ;
-                 else var value = sim_lines[index] ;
-
-                 var diff = new Object() ;
-                 diff.expected  = expected_result.screen[index] ;
-                 diff.obtained  = value ;
-                 diff.equals    = (expected_result.screen[index] == value) ;
-                 diff.elto_type = "screen" ;
-                 diff.elto_id   = line ;
-                 result.push(diff) ;
-
-                 if (diff.equals === false) errors++ ;
-            }
-        }
-
-        var d = new Object() ;
-        d.result = result ;
-        d.errors = errors ;
-        return d ;
-    }
 
