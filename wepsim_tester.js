@@ -203,17 +203,17 @@
 	o = o + "<tr>" +
 		"<td>" + mfile.name + "</td>" +
 		"<td>" +
-		"    <div id='LF" + i + "' style='display:none;'></div>" +
+		"    <div id='LF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IF').popup('open');" + 
 		"                 var firm=$('#LF"+i+"').text();" + 
-		"                 $('#LF').html('<div style=\\'overflow:auto\\'><pre>'+firm+'</pre><div>');"+
+		"                 $('#LF').html('<div style=\\'overflow:auto; height:75vh; width:75vw;\\'><pre>'+firm+'</pre><div>');"+
 		"                 $('#LF').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RL" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
-		"    <div id='BF" + i + "' style='display:none;'></div>" +
+		"    <div id='BF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IUC').popup('open');" + 
 		"                 $('#BF').html('<h1>Please &#181;check and wait...</h1>');" +
@@ -226,7 +226,7 @@
 		"       data-rel='popup'><div id='RUC" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
-		"    <div id='EF" + i + "' style='display:none;'></div>" +
+		"    <div id='EF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IE').popup('open');" + 
 		"                 $('#EF').html('<h1>Please &#181;check and wait...</h1>');" +
@@ -239,7 +239,7 @@
 		"       data-rel='popup'><div id='RE" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
-		"    <div id='XF" + i + "' style='display:none;'></div>" +
+		"    <div id='XF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IX').popup('open');" + 
 		"                 $('#XF').html('<h1>Please &#181;check and wait...</h1>');" +
@@ -252,7 +252,7 @@
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
-		"    <div id='CF" + i + "' style='display:none;font-size:small;'></div>" +
+		"    <div id='CF" + i + "' style='display:none;font-size:small; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
 		"       onclick=\"$('#IC').popup('open');" + 
 		"                 $('#CF').html('<h1>NO COMMENTS</h1>');" +
@@ -293,13 +293,13 @@
             o = o +    "<div class='row'>" +
                        "<div class='col-xs-3 col-sm-3'>" +
                        "<center><h3>Memory map</h3></center>" +
-                       "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto; height:70% !important;'>" +
+                       "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto;'>" +
                        "   <div id='compile_mm'></div>" +
                        "</div>" +
                        "</div>" +
                        "<div class='col-xs-9 col-sm-9'>" +
                        "<center><h3>Main memory</h3></center>" +
-                       "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; height:70% !important;'>" +
+                       "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; max-height:80vh;'>" +
                        "   <div id='compile_mp'>" +
                        "      <center>Please select 'Compile' secondly to have the associated binary code.</center>" +
                        "   </div>" +

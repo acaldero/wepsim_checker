@@ -161,34 +161,35 @@
                 <div data-role='popup' id='IF'>
                     <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                    <div id='LF'>Firmware is not loaded.</div>
+                    <div id='LF' style="overflow:auto; max-height:80vh; max-width:80vw;">Firmware is not loaded.</div>
                 </div>
 
                 <div data-role='popup' id='IUC'>
                     <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                    <div id='BF'>Firmware is not micro-compiled.</div>
+                    <div id='BF' style="overflow:auto; max-height:80vh; max-width:80vw;">Firmware is not micro-compiled.</div>
                 </div>
 
                 <div data-role='popup' id='IE'>
                     <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                    <div id='EF'>Firmware is not tested.</div>
+                    <div id='EF' style="overflow:auto; max-height:80vh; max-width:80vw;">Firmware is not tested.</div>
                 </div>
 
                 <div data-role='popup' id='IX'>
                     <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                    <div id='XF'>Firmware is not checked.</div>
+                    <div id='XF' style="overflow:auto; max-height:80vh; max-width:80vw;">Firmware is not checked.</div>
                 </div>
 
                 <div data-role='popup' id='IC'>
                     <a href='#' data-rel='back'
                        class='ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right'>Close</a>
-                    <div id='CF'>No comments.</div>
+                    <div id='CF' style="overflow:auto; max-height:80vh; max-width:80vw;">No comments.</div>
                 </div>
 
-                <table data-role="table" id="tmfiles" data-mode="reflow" class="ui-responsive table-stroke">
+                <table data-role="table" id="tmfiles" data-mode="reflow" 
+                       class="ui-responsive table-stroke table-bordered table-condensed table-hover">
                 <thead>
                  <tr>
                  <th width=20%>File name</th>
@@ -198,7 +199,7 @@
 			<div data-role="popup" id="show_asm_test">
                         <a href="#" data-rel="back"
                            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-			<pre id=asm_test></pre>
+			<pre id="asm_test" style="overflow:scroll; max-height:80vh;"></pre>
 			</div>
                         <a href="#show_asm_test" data-rel="popup" data-transition="none">(Test)</a>
 			</th>
@@ -206,7 +207,7 @@
 			<div data-role="popup" id="show_checklist">
                         <a href="#" data-rel="back"
                            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-			<pre id=checklist></pre>
+			<pre id="checklist" style="overflow:scroll; max-height:80vh;"></pre>
 			</div>
                         <a href="#show_checklist" data-rel="popup" data-transition="none">(Checklist)</a>
 			</th>
@@ -215,6 +216,7 @@
                 </thead>
                 <tbody id="tbmfile">
                  <tr>
+                 <td>...</td>
                  <td>...</td>
                  <td>...</td>
                  <td>...</td>
@@ -236,7 +238,9 @@
    <h1><b>Web Elemental Processor SIMulator Tester</b> <span class="badge btn-success">2.0.1</span> </h1>
    </div>
    <div role="main" class="ui-content">
-        <table data-role="table" id="tabout2" data-mode="reflow" class="ui-responsive">
+        <table id="tabout2" 
+               data-role="table" data-mode="reflow" 
+               class="ui-responsive" style="max-width:80vw;">
         <thead align=center>
         <tr>
         <th>&nbsp;</th>
