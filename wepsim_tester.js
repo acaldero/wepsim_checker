@@ -57,6 +57,46 @@
 	$("#RC" +i).text(old_msg);
     }
 
+    function execute_asm_and_firmware ( )
+    {
+        // execute firmware-assembly
+        init("","","","");
+	reset() ;
+
+	var reg_pc        = sim_states["REG_PC"].value ;
+	var reg_pc_before = sim_states["REG_PC"].value - 4 ;
+
+	var code_begin  = 0 ;
+	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
+	      code_begin = parseInt(segments['.text'].begin) ;
+	var code_end    = 0 ;
+	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
+	      code_end = parseInt(segments['.text'].end) ;
+
+	var kcode_begin = 0 ; 
+	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
+	      kcode_begin = parseInt(segments['.ktext'].begin) ;
+	var kcode_end   = 0 ; 
+	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
+	      kcode_end = parseInt(segments['.ktext'].end) ;
+
+        var ret = true ;
+	while (
+                       (ret) &&
+                       (reg_pc != reg_pc_before) && 
+                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
+                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
+                  )
+	{
+	       ret = execute_microprogram(2048) ;
+
+	       reg_pc_before = reg_pc ;
+	       reg_pc = sim_states["REG_PC"].value ;
+	}
+
+        return ret ;
+    }
+
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
     {
         var neltos  = parseInt($("#pbar1").attr('aria-valuemax'));
@@ -84,7 +124,7 @@
 		$("#RUC"+i).text("1");
                 add_comment(i, "firmware error:"+preSM.error.split("(*)")[1], preSM.error);
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
                 return;
 	}
 	$("#RUC"+i).text("0");
@@ -99,46 +139,14 @@
 		$("#RE"+i).text("1");
                 add_comment(i, "assembly error:"+SIMWAREaddon.error.split("(*)")[1], SIMWAREaddon.error);
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
+                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
                 return;
 	}
 	set_simware(SIMWAREaddon) ;
 	update_memories(SIMWARE) ;
 
         // execute firmware-assembly
-        init("","","","");
-	reset() ;
-
-	var reg_pc        = sim_states["REG_PC"].value ;
-	var reg_pc_before = sim_states["REG_PC"].value - 4 ;
-
-	var code_begin  = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
-	      code_begin = parseInt(segments['.text'].begin) ;
-	var code_end    = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
-	      code_end = parseInt(segments['.text'].end) ;
-
-	var kcode_begin = 0 ; 
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
-	      kcode_begin = parseInt(segments['.ktext'].begin) ;
-	var kcode_end   = 0 ; 
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
-	      kcode_end = parseInt(segments['.ktext'].end) ;
-
-        var ret = true;
-	while (
-                       (ret) &&
-                       (reg_pc != reg_pc_before) && 
-                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
-                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
-                  )
-	{
-	       ret = execute_microprogram(2048) ;
-
-	       reg_pc_before = reg_pc ;
-	       reg_pc = sim_states["REG_PC"].value ;
-	}
+        var ret = execute_asm_and_firmware() ;
 
         // compare with expected results
         var obj_result = wepsim_to_check(json_checklist) ;
@@ -146,7 +154,7 @@
         {
             add_comment(i, 
                         "execution error:" + wepsim_checkreport2txt(obj_result.result), 
-                        JSON.stringify(obj_result.result,null,2));
+                        JSON.stringify(obj_result.result, null, 2));
         }
 
         if (ret == false)
@@ -159,12 +167,12 @@
         }
         else
         {
-	    $("#XF"+i).text(JSON.stringify(obj_result.result,null,2));
+	    $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
 	    $("#RX"+i).text(obj_result.errors);
         }
 
         // next firmware
-        setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 220);
+        setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
     }
 
     function execute_firmwares_and_asm ( checklist_text, asm_text )
@@ -186,14 +194,14 @@
 
     function load_firmware_from_files_aux ( mfiles, fileReader, i )
     {
-	    fileReader[i] = new FileReader();
-	    fileReader[i].onload = function (fileLoadedEvent) {
-					    var textFromFileLoaded = fileLoadedEvent.target.result;
-					    $("#LF"+i).text(textFromFileLoaded);
-					  //$("#LF"+i).css('overflow-y', 'scroll');
-					    $("#RL"+i).text('0');
-				   };
-	    fileReader[i].readAsText(mfiles[i], "UTF-8");
+	 fileReader[i] = new FileReader();
+	 fileReader[i].onload = function (fileLoadedEvent) {
+				    var textFromFileLoaded = fileLoadedEvent.target.result;
+				    $("#LF"+i).text(textFromFileLoaded);
+				  //$("#LF"+i).css('overflow-y', 'scroll');
+				    $("#RL"+i).text('0');
+				};
+	 fileReader[i].readAsText(mfiles[i], "UTF-8");
     }   
 
     function show_filerow ( mfile, i )
@@ -205,61 +213,61 @@
 		"<td>" +
 		"    <div id='LF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#IF').popup('open');" + 
+		"       onclick=\"$('#popup1').popup('open');" + 
 		"                 var firm=$('#LF"+i+"').text();" + 
-		"                 $('#LF').html('<div style=\\'overflow:auto; height:75vh; width:75vw;\\'><pre>'+firm+'</pre><div>');"+
-		"                 $('#LF').enhanceWithin();" + "\""+
+		"                 $('#popup1div').html('<div style=\\'overflow:auto; height:75vh; width:75vw;\\'><pre>'+firm+'</pre><div>');"+
+		"                 $('#popup1div').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RL" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='BF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#IUC').popup('open');" + 
-		"                 $('#BF').html('<h1>Please &#181;check and wait...</h1>');" +
+		"       onclick=\"$('#popup1').popup('open');" + 
+		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
 		"                 var firm_json=$('#BF"+i+"').text();" + 
 		"                 if (firm_json == '') return;" + 
 		"                 var firm = JSON.parse(firm_json);" +
-		"                 show_firm_result('#BF', firm);" +
-		"                 $('#BF').enhanceWithin();" + "\""+
+		"                 show_firm_result('#popup1div', firm);" +
+		"                 $('#popup1div').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RUC" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='EF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#IE').popup('open');" + 
-		"                 $('#EF').html('<h1>Please &#181;check and wait...</h1>');" +
+		"       onclick=\"$('#popup1').popup('open');" + 
+		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
 		"                 var asm_json=$('#EF"+i+"').text();" + 
 		"                 if (asm_json == '') return;" + 
 		"                 var asm = JSON.parse(asm_json);" +
-		"                 show_asm_result('#EF', asm);" +
-		"                 $('#EF').enhanceWithin();" + "\""+
+		"                 show_asm_result('#popup1div', asm);" +
+		"                 $('#popup1div').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RE" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='XF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#IX').popup('open');" + 
-		"                 $('#XF').html('<h1>Please &#181;check and wait...</h1>');" +
+		"       onclick=\"$('#popup1').popup('open');" + 
+		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
 		"                 var chcklst_json=$('#XF"+i+"').text();" + 
 		"                 if (chcklst_json == '') return;" + 
 		"                 var chcklst = JSON.parse(chcklst_json);" +
-		"                 show_checklist_result('#XF', chcklst);" +
-		"                 $('#XF').enhanceWithin();" + "\""+
+		"                 show_checklist_result('#popup1div', chcklst);" +
+		"                 $('#popup1div').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='CF" + i + "' style='display:none;font-size:small; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#IC').popup('open');" + 
-		"                 $('#CF').html('<h1>NO COMMENTS</h1>');" +
+		"       onclick=\"$('#popup1').popup('open');" + 
+		"                 $('#popup1div').html('<h1>NO COMMENTS</h1>');" +
 		"                 var comments=$('#CF"+i+"').text();" + 
 		"                 if (comments== '') return;" + 
-		"                 show_comments_result('#CF', comments);" +
-		"                 $('#CF').enhanceWithin();" + "\""+
+		"                 show_comments_result('#popup1div', comments);" +
+		"                 $('#popup1div').enhanceWithin();" + "\""+
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RC" + i + "'>\"NONE\"</div></a>" + 
 		"</td>" +
