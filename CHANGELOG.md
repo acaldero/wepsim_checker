@@ -1,7 +1,10 @@
 
-1.2.0 -> 1.5.0:
-* Update the wepsim engine to 1.8.0
+1.2.0 -> 2.0.1:
 * Minor bugfix on memory checker
+
+1.2.0 -> 2.0.0:
+* Update the wepsim engine to 1.8.1
+* To use the native checker support from 1.8.1
 
 1.1.0 -> 1.2.0:
 * Update the wepsim engine to 1.7.6

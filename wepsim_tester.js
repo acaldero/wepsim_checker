@@ -143,7 +143,11 @@
         // compare with expected results
         var obj_result = wepsim_to_check(json_checklist) ;
         if (obj_result.errors != 0)
-            add_comment(i, "execution error:"+checkreport2txt(obj_result.result), JSON.stringify(obj_result.result,null,2));
+        {
+            add_comment(i, 
+                        "execution error:" + wepsim_checkreport2txt(obj_result.result), 
+                        JSON.stringify(obj_result.result,null,2));
+        }
 
         if (ret == false)
         {
@@ -169,7 +173,7 @@
 	var SIMWARE = get_simware() ;
 
         // get the json_checklist
-        var json_checklist = read_checklist(checklist_text) ;
+        var json_checklist = wepsim_read_checklist(checklist_text) ;
 
         // loop over firmwares, execute the asm code over it
         execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, 0) ;
@@ -322,7 +326,7 @@
                  return;
             }
 
-	    $(jqDiv).html(checkreport2html(checklist)) ;
+	    $(jqDiv).html(wepsim_checkreport2html(checklist, false)) ;
     }   
 
     function show_comments_result ( jqDiv, comments )
