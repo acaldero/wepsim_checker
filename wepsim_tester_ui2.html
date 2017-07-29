@@ -102,38 +102,19 @@
 		    <div role="main" class="ui-content">
 
                         <h3>Please select the files to be loaded:</h3>
-                        <p><input type="file" id="filesToLoad" multiple/></p>
+                        <p><input type="file" id="filesToLoada" multiple/></p>
 
 			<h3>Please select the file to be used as assembly test:</h3>
-			<p><input type="file" id="fileToLoad3" /></p>
+			<p><input type="file" id="fileToLoad3a" /></p>
 
 			<h3>Please select the file to be used as checklist:</h3>
-			<p><input type="file" id="fileToLoad5" /></p>
+			<p><input type="file" id="fileToLoad5a" /></p>
 
 			<center>
 			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" 
                                     data-rel="back">Cancel</a>
                         <button class="ui-btn ui-btn-b ui-btn-inline"
-                                onclick="// load microcodes
-                                         mfiles = document.getElementById('filesToLoad').files;
-                                         load_firmware_from_files(mfiles, '#tbmfile');
-
-                                         // load assembly
-                                         var fileToLoad = document.getElementById('fileToLoad3').files[0];
-					 var fileReader = new FileReader();
-					 fileReader.onload = function (fileLoadedEvent) {
-							       $('#asm_test').text(fileLoadedEvent.target.result);
-							     };
-					 fileReader.readAsText(fileToLoad, 'UTF-8');
-
-                                         // load checklist
-                                         var fileToLoad = document.getElementById('fileToLoad5').files[0];
-					 var fileReader = new FileReader();
-					 fileReader.onload = function (fileLoadedEvent) {
-							       $('#checklist').text(fileLoadedEvent.target.result);
-							     };
-					 fileReader.readAsText(fileToLoad, 'UTF-8');
-
+                                onclick="load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');
                                          $('#lsload8').popup('close');">Load from File</button>
                         </center>
 		    </div>
@@ -267,20 +248,75 @@
      style="width:19em; min-width:18em;">
 
       <ol id="listview_2" data-role="listview" data-inset="true" data-theme="a" data-divider-theme="b">
-	    <li><a href="#lsload8" style="background-color: lightgray"
+            <li><h1>Microcodes</h1>
+                <input type="file" id="filesToLoadb" multiple/></li>
+
+	    <li><h1>Assembly file</h1>
+		<input type="file" id="fileToLoad3b" /></li>
+
+	    <li><h1>Checklist file</h1>
+		<input type="file" id="fileToLoad5b" /></li>
+
+	    <li><a href="#" style="background-color: lightgray"
+		   onclick="load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
 		   data-rel="popup" data-position-to="origin" data-transition="none"
-                   data-inline="true"><h2>Load files</h2><p>First step</p></a></li>
+                   data-inline="true"><h2>Load files</h2><p>Load former files...</p></a></li>
 
 	    <li><a href="#" style="background-color: lightgray"
                    onclick="var checklist_text = $('#checklist').text();
 			    var asm_text       = $('#asm_test').text();
 			    execute_firmwares_and_asm(checklist_text,asm_text);"
-		   data-inline="true"><h2>&#181;check</h2><p>Fourth step</p></a></li>
+		   data-inline="true"><h2>&#181;check</h2><p>Check microcodes...</p></a></li>
       </ol>
 </div>
 
 
+<div class="material-button-anim" 
+     style="margin:0 0 0 0; padding:0 0 0 0; top:55vh; right:10px; z-index:5; position:absolute;">
+	  <ul class="list-inline" id="options">
+	    <li class="option">
+	      <button class="material-button option1" type="button"
+		      onclick="$('#lsload8').popup('open');">load</button>
+	    </li>
+	    <li class="option">
+	      <button class="material-button option2" type="button"
+                      onclick="load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
+	    </li>
+	    <li class="option">
+	      <button class="material-button option3" type="button"
+		      onclick="var checklist_text = $('#checklist').text();
+			       var asm_text       = $('#asm_test').text();
+			       execute_firmwares_and_asm(checklist_text,asm_text);">&#181;check</button>
+	    </li>
+	  </ul>
+	  <button class="material-button material-button-toggle" type="button">Men&uacute;</button>
+</div>
+
+
 <script>
+    function load_files ( id_mc, id_asm, id_checklst )
+    {
+	    // microcode
+	    mfiles = document.getElementById(id_mc).files;
+	    load_firmware_from_files(mfiles, '#tbmfile');
+
+	    // assembly 
+	    var fileToLoad = document.getElementById(id_asm).files[0];
+	    var fileReader = new FileReader();
+	    fileReader.onload = function (fileLoadedEvent) {
+				   $('#asm_test').text(fileLoadedEvent.target.result);
+				};
+	    fileReader.readAsText(fileToLoad, 'UTF-8');
+
+	    // checklist
+	    var fileToLoad = document.getElementById(id_checklst).files[0];
+	    var fileReader = new FileReader();
+	    fileReader.onload = function (fileLoadedEvent) {
+				   $('#checklist').text(fileLoadedEvent.target.result);
+				};
+	    fileReader.readAsText(fileToLoad, 'UTF-8');
+    }
+
     restore_cfg();
 
     $(document).ready(function()
@@ -290,6 +326,11 @@
             $("#about2").enhanceWithin().popup();
             $("#actions_panel").panel().enhanceWithin();
             $("#listview_2").listview();
+
+            $('.material-button-toggle').on("click", function () {
+                $(this).toggleClass('open');
+                $('.option').toggleClass('scale-on');
+            });
     }) ;
 </script>
 
