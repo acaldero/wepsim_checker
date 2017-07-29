@@ -1,6 +1,7 @@
 
-1.2.0 -> 2.0.1:
+1.2.0 -> 2.0.2:
 * Minor bugfix on memory checker
+* Minor improvements on the interface
 
 1.2.0 -> 2.0.0:
 * Update the wepsim engine to 1.8.1

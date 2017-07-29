@@ -198,7 +198,6 @@
 	 fileReader[i].onload = function (fileLoadedEvent) {
 				    var textFromFileLoaded = fileLoadedEvent.target.result;
 				    $("#LF"+i).text(textFromFileLoaded);
-				  //$("#LF"+i).css('overflow-y', 'scroll');
 				    $("#RL"+i).text('0');
 				};
 	 fileReader[i].readAsText(mfiles[i], "UTF-8");
@@ -213,61 +212,35 @@
 		"<td>" +
 		"    <div id='LF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#popup1').popup('open');" + 
-		"                 var firm=$('#LF"+i+"').text();" + 
-		"                 $('#popup1div').html('<div style=\\'overflow:auto; height:75vh; width:75vw;\\'><pre>'+firm+'</pre><div>');"+
-		"                 $('#popup1div').enhanceWithin();" + "\""+
+		"       onclick=\"show_firm_origin(" + i + ");\"" +
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RL" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='BF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#popup1').popup('open');" + 
-		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
-		"                 var firm_json=$('#BF"+i+"').text();" + 
-		"                 if (firm_json == '') return;" + 
-		"                 var firm = JSON.parse(firm_json);" +
-		"                 show_firm_result('#popup1div', firm);" +
-		"                 $('#popup1div').enhanceWithin();" + "\""+
+		"       onclick=\"show_firm_result(" + i + ");\"" +
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RUC" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='EF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#popup1').popup('open');" + 
-		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
-		"                 var asm_json=$('#EF"+i+"').text();" + 
-		"                 if (asm_json == '') return;" + 
-		"                 var asm = JSON.parse(asm_json);" +
-		"                 show_asm_result('#popup1div', asm);" +
-		"                 $('#popup1div').enhanceWithin();" + "\""+
+		"       onclick=\"show_asm_result(" + i + ");\"" +
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RE" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='XF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#popup1').popup('open');" + 
-		"                 $('#popup1div').html('<h1>Please &#181;check and wait...</h1>');" +
-		"                 var chcklst_json=$('#XF"+i+"').text();" + 
-		"                 if (chcklst_json == '') return;" + 
-		"                 var chcklst = JSON.parse(chcklst_json);" +
-		"                 show_checklist_result('#popup1div', chcklst);" +
-		"                 $('#popup1div').enhanceWithin();" + "\""+
+		"       onclick=\"show_checklist_result(" + i + ");\"" +
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
 		"</td>" +
 		"<td>" +
 		"    <div id='CF" + i + "' style='display:none;font-size:small; max-height:80vh; max-width:80vw;'></div>" +
 		"    <a href='#' " + 
-		"       onclick=\"$('#popup1').popup('open');" + 
-		"                 $('#popup1div').html('<h1>NO COMMENTS</h1>');" +
-		"                 var comments=$('#CF"+i+"').text();" + 
-		"                 if (comments== '') return;" + 
-		"                 show_comments_result('#popup1div', comments);" +
-		"                 $('#popup1div').enhanceWithin();" + "\""+
+		"       onclick=\"show_comments_result(" + i + ");\"" +
                 "       data-position-to='windows' data-transition='none' " +
 		"       data-rel='popup'><div id='RC" + i + "'>\"NONE\"</div></a>" + 
 		"</td>" +
@@ -278,73 +251,91 @@
 
     // Auxiliar to show_filerow
 
-    function show_firm_result ( jqDiv, firm )
+    function show_firm_origin ( index )
     {
+	    var firm=$('#LF' + index).text() ;
+	    if (firm == '')
+	        return show_popup1_content('<br><pre>ERROR: Empty firmware.</pre><br>') ;
+
+            var content = '<div style="overflow:auto; height:75vh; width:75vw;"><pre>'+firm+'</pre><div>' ;
+            show_popup1_content(content) ;
+    }   
+
+    function show_firm_result ( index )
+    {
+	    var firm_json=$('#BF' + index).text() ;
+	    if (firm_json == '')
+	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+
+	    var firm = JSON.parse(firm_json) ;
 	    if (firm.error != null)
-            {
-	         $(jqDiv).html('<br><pre>' + firm.error + '</pre><br>') ;
-                 return;
-            }
+	        return show_popup1_content('<br><pre>' + firm.error + '</pre><br>') ;
 
-	    $(jqDiv).html(firmware2html(firm.firmware, false)) ;
+	    var content = firmware2html(firm.firmware, false) ;
+            show_popup1_content(content) ;
     }   
 
-    function show_asm_result ( jqDiv, SIMWAREaddon )
+    function show_asm_result ( index )
     {
-	    if (SIMWAREaddon.error != null)
-	    {
-	        $(jqDiv).html('<br><pre>' + SIMWAREaddon.error + '</pre><br>');
-	        return;
-	    }
+	    var asm_json=$('#EF' + index).text() ;
+	    if (asm_json == '')
+	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
 
-            var o = "" ;
-            o = o +    "<div class='row'>" +
-                       "<div class='col-xs-3 col-sm-3'>" +
-                       "<center><h3>Memory map</h3></center>" +
-                       "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto;'>" +
-                       "   <div id='compile_mm'></div>" +
-                       "</div>" +
-                       "</div>" +
-                       "<div class='col-xs-9 col-sm-9'>" +
-                       "<center><h3>Main memory</h3></center>" +
-                       "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; max-height:80vh;'>" +
-                       "   <div id='compile_mp'>" +
-                       "      <center>Please select 'Compile' secondly to have the associated binary code.</center>" +
-                       "   </div>" +
-                       "</div>" +
-                       "</div>" +
-                       "</div>" ;
-	    $(jqDiv).html(o);
+	    var asm = JSON.parse(asm_json) ;
+	    if (asm.error != null)
+	        return show_popup1_content('<br><pre>' + asm.error + '</pre><br>');
 
-            $("#compile_mp").html(mp2html(SIMWAREaddon.mp, SIMWAREaddon.labels2, SIMWAREaddon.seg));
-            $("#compile_mm").html(segments2html(SIMWAREaddon.seg));
+            var o = "<div class='row'>" +
+                    "<div class='col-xs-3 col-sm-3'>" +
+                    "<center><h3>Memory map</h3></center>" +
+                    "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto;'>" +
+                    "   <div id='compile_mm'>" + segments2html(asm.seg) + "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='col-xs-9 col-sm-9'>" +
+                    "<center><h3>Main memory</h3></center>" +
+                    "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; max-height:80vh;'>" +
+                    "   <div id='compile_mp'>" + mp2html(asm.mp, asm.labels2, asm.seg) + "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" ;
+            show_popup1_content(o) ;
 
-            for (skey in SIMWAREaddon.seg) 
+            for (skey in asm.seg) 
             {
-                 $("#compile_begin_" + skey).html("0x" + SIMWAREaddon.seg[skey].begin.toString(16));
-                 $("#compile_end_"   + skey).html("0x" + SIMWAREaddon.seg[skey].end.toString(16));
+                 $("#compile_begin_" + skey).html("0x" + asm.seg[skey].begin.toString(16));
+                 $("#compile_end_"   + skey).html("0x" + asm.seg[skey].end.toString(16));
             }
+	    $('#popup1div').enhanceWithin() ;
+    }
+
+    function show_checklist_result ( index )
+    {
+	    var chcklst_json=$('#XF' + index).text() ;
+	    if (chcklst_json == '')
+	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+
+	    var chcklst = JSON.parse(chcklst_json) ;
+	    if (chcklst.error != null)
+	        return show_popup1_content('<br><pre>' + chcklst.error + '</pre><br>') ;
+
+            var content = wepsim_checkreport2html(chcklst, false) ;
+            show_popup1_content(content) ;
     }   
 
-    function show_checklist_result ( jqDiv, checklist )
+    function show_comments_result ( index )
     {
-	    if (checklist.error != null)
-            {
-	         $(jqDiv).html('<br><pre>' + checklist.error + '</pre><br>') ;
-                 return;
-            }
+	    var comments=$('#CF' + index).text() ;
+	    if ( (comments== '') || (comments == null) )
+                 return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
 
-	    $(jqDiv).html(wepsim_checkreport2html(checklist, false)) ;
+            show_popup1_content(comments) ;
     }   
 
-    function show_comments_result ( jqDiv, comments )
+    function show_popup1_content ( content )
     {
-	    if (comments == null)
-            {
-	         $(jqDiv).html('<pre>Empty</pre>') ;
-                 return;
-            }
-
-	    $(jqDiv).html(comments) ;
+	    $('#popup1').popup('open') ;
+	    $('#popup1div').html(content) ;
+	    $('#popup1div').enhanceWithin() ;
     }   
 
