@@ -57,7 +57,7 @@
 	$("#RC" +i).text(old_msg);
     }
 
-    function execute_asm_and_firmware ( )
+    function execute_asm_and_firmware ( chk_limit )
     {
         // execute firmware-assembly
         init("","","","");
@@ -88,7 +88,7 @@
                        ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
                   )
 	{
-	       ret = execute_microprogram(2048) ;
+	       ret = execute_microprogram(chk_limit) ;
 
 	       reg_pc_before = reg_pc ;
 	       reg_pc = sim_states["REG_PC"].value ;
@@ -146,7 +146,7 @@
 	update_memories(SIMWARE) ;
 
         // execute firmware-assembly
-        var ret = execute_asm_and_firmware() ;
+        var ret = execute_asm_and_firmware(2048) ;
 
         // compare with expected results
         var obj_result = wepsim_to_check(json_checklist) ;
