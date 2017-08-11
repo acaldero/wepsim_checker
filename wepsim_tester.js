@@ -149,7 +149,8 @@
         var ret = execute_asm_and_firmware(2048) ;
 
         // compare with expected results
-        var obj_result = wepsim_to_check(json_checklist) ;
+        var obj_current = wepsim_current2state();
+        var obj_result  = wepsim_diff_results(json_checklist, obj_current) ;
         if (obj_result.errors != 0)
         {
             add_comment(i, 
@@ -181,7 +182,7 @@
 	var SIMWARE = get_simware() ;
 
         // get the json_checklist
-        var json_checklist = wepsim_read_checklist(checklist_text) ;
+        var json_checklist = wepsim_checklist2state(checklist_text) ;
 
         // loop over firmwares, execute the asm code over it
         execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, 0) ;
