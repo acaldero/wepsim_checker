@@ -102,13 +102,16 @@
 		    <div role="main" class="ui-content">
 
                         <h3>Please select the files to be loaded:</h3>
-                        <p><input type="file" id="filesToLoada" class="dropify" multiple/></p>
+                        <p><input type="file" id="filesToLoada" multiple
+                                  data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as assembly test:</h3>
-			<p><input type="file" id="fileToLoad3a" class="dropify" /></p>
+			<p><input type="file" id="fileToLoad3a" 
+                                  data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as checklist:</h3>
-			<p><input type="file" id="fileToLoad5a" class="dropify" /></p>
+			<p><input type="file" id="fileToLoad5a" 
+                                  data-max-height="100" class="dropify" /></p>
 
 			<center>
 			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" 
@@ -313,6 +316,8 @@
                 $(this).toggleClass('open');
                 $('.option').toggleClass('scale-on');
             });
+
+            $('.dropify').dropify();
     }) ;
 </script>
 
