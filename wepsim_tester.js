@@ -1,8 +1,8 @@
-/*      
+/*
  *  Copyright 2015-2017 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
  *
  *  This file is part of WepSIM tester.
- * 
+ *
  *  WepSIM is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -31,7 +31,7 @@
 	self.checklist = ko.observable(''),
 
         self.mfiles    = ko.observableArray([]),
-        self.addFile   = function(a,b,c,d,e,f,g,h,i,j,k) 
+        self.addFile   = function(a,b,c,d,e,f,g,h,i,j,k)
                          {
                             this.mfiles.push({ name:ko.observable(a),
                                                LF:ko.observable(b),
@@ -43,7 +43,7 @@
                                                XF:ko.observable(h),
                                                RX:ko.observable(i),
                                                CF:ko.observable(j),
-                                               RC:ko.observable(k) }) ; 
+                                               RC:ko.observable(k) }) ;
 
 			    $("#pbar1").attr('aria-valuemax', this.mfiles().length);
                          }
@@ -54,12 +54,18 @@
 	    // microcode
 	    mfiles = document.getElementById(id_mc).files;
 	    var fileReader = new Array();
-	    for (var i=0; i<mfiles.length; i++) {
-	         load_firmware_from_files_aux(mfiles, fileReader, i);
+	    for (var i=0; i<mfiles.length; i++)
+            {
+		 fileReader[i] = new FileReader();
+		 fileReader[i].onload = function (fileLoadedEvent) {
+					    model.addFile(mfiles[i].name, fileLoadedEvent.target.result, '0',
+							  '', 'NONE', '', 'NONE', '', 'NONE', '', 'NONE') ;
+					};
+		 fileReader[i].readAsText(mfiles[i], "UTF-8");
 	    }
 
-	    // assembly 
-	    if (document.getElementById(id_asm).files.length > 0) 
+	    // assembly
+	    if (document.getElementById(id_asm).files.length > 0)
             {
 	        var fileToLoad = document.getElementById(id_asm).files[0];
 	        var fileReader = new FileReader();
@@ -70,7 +76,7 @@
             }
 
 	    // checklist
-	    if (document.getElementById(id_checklst).files.length > 0) 
+	    if (document.getElementById(id_checklst).files.length > 0)
             {
 	        var fileToLoad = document.getElementById(id_checklst).files[0];
 	        var fileReader = new FileReader();
@@ -79,19 +85,6 @@
 				    };
 	        fileReader.readAsText(fileToLoad, 'UTF-8');
             }
-    }
-
-    function add_comment ( i, stage, msg )
-    {
-	model.mfiles()[i].CF(model.mfiles()[i].CF() + msg + "<br><br>");
-
-	var old_msg = model.mfiles()[i].RC() ;
-        if (old_msg == "\"NONE\"")
-             model.mfiles()[i].RC(          "\"" + stage + "\" ");
-	else model.mfiles()[i].RC(old_msg + "\"" + stage + "\" ");
-
-	old_msg = model.mfiles()[i].RC().replace("\" \"",", ");
-        model.mfiles()[i].RC(old_msg);
     }
 
     function execute_asm_and_firmware ( chk_limit )
@@ -110,18 +103,18 @@
 	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
 	      code_end = parseInt(segments['.text'].end) ;
 
-	var kcode_begin = 0 ; 
+	var kcode_begin = 0 ;
 	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
 	      kcode_begin = parseInt(segments['.ktext'].begin) ;
-	var kcode_end   = 0 ; 
+	var kcode_end   = 0 ;
 	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
 	      kcode_end = parseInt(segments['.ktext'].end) ;
 
         var ret = true ;
 	while (
                        (ret) &&
-                       (reg_pc != reg_pc_before) && 
-                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) || 
+                       (reg_pc != reg_pc_before) &&
+                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
                        ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
                   )
 	{
@@ -132,6 +125,19 @@
 	}
 
         return ret ;
+    }
+
+    function add_comment ( i, stage, msg )
+    {
+	model.mfiles()[i].CF(model.mfiles()[i].CF() + msg + "<br><br>");
+
+	var old_msg = model.mfiles()[i].RC() ;
+        if (old_msg == "\"NONE\"")
+             model.mfiles()[i].RC(          "\"" + stage + "\" ");
+	else model.mfiles()[i].RC(old_msg + "\"" + stage + "\" ");
+
+	old_msg = model.mfiles()[i].RC().replace("\" \"",", ");
+        model.mfiles()[i].RC(old_msg);
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
@@ -145,7 +151,7 @@
         $("#pbar1").css("width", percent + "%");
 
         // check last element
-        if (i >= neltos) 
+        if (i >= neltos)
             return;
 
 	var ita = model.mfiles().length;
@@ -161,7 +167,9 @@
                 model.mfiles()[i].RUC("1");
                 add_comment(i, "firmware error:"+preSM.error.split("(*)")[1], preSM.error);
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
+                setTimeout(function() {
+                             execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1);
+                           }, 120);
                 return;
 	}
         model.mfiles()[i].RUC("0");
@@ -171,12 +179,14 @@
 	var SIMWAREaddon = simlang_compile(asm_text, SIMWARE);
         model.mfiles()[i].EF(JSON.stringify(SIMWAREaddon, null, 2));
         model.mfiles()[i].RE("0");
-	if (SIMWAREaddon.error != null) 
+	if (SIMWAREaddon.error != null)
 	{
                 model.mfiles()[i].RE("1");
                 add_comment(i, "assembly error:"+SIMWAREaddon.error.split("(*)")[1], SIMWAREaddon.error);
 
-                setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
+                setTimeout(function() {
+                              execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1);
+                           }, 120);
                 return;
 	}
 	set_simware(SIMWAREaddon) ;
@@ -190,8 +200,8 @@
         var obj_result  = wepsim_diff_results(json_checklist, obj_current) ;
         if (obj_result.errors != 0)
         {
-            add_comment(i, 
-                        "execution error:" + wepsim_checkreport2txt(obj_result.result), 
+            add_comment(i,
+                        "execution error:" + wepsim_checkreport2txt(obj_result.result),
                         JSON.stringify(obj_result.result, null, 2));
         }
 
@@ -230,28 +240,18 @@
     //  Auxiliar functions
     //
 
-    function load_firmware_from_files_aux ( mfiles, fileReader, i )
-    {
-	 fileReader[i] = new FileReader();
-	 fileReader[i].onload = function (fileLoadedEvent) {
-                                    model.addFile(mfiles[i].name, fileLoadedEvent.target.result, '0', 
-                                                  '', 'NONE', '', 'NONE', '', 'NONE', '', 'NONE') ;
-				};
-	 fileReader[i].readAsText(mfiles[i], "UTF-8");
-    }   
-
-
-    // Auxiliar to show_filerow
-
     function show_firm_origin ( index )
     {
 	    var firm= model.mfiles()[index].LF() ;
 	    if (firm == '')
 	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
-            var content = '<div style="overflow:auto; height:65vh;"><pre>'+firm+'</pre><div>' ;
-            show_popup1_content('Firmware', content) ;
-    }   
+	    show_popup1_content('Firmware', 'Loading, please wait...') ;
+            setTimeout(function() {
+			    var content = '<div style="overflow:auto; height:65vh;"><pre>'+firm+'</pre><div>' ;
+			    show_popup1_content('Firmware', content) ;
+                       }, 50);
+    }
 
     function show_firm_result ( index )
     {
@@ -296,7 +296,7 @@
                     "</div>" ;
             show_popup1_content('Assembly', o) ;
 
-            for (skey in asm.seg) 
+            for (skey in asm.seg)
             {
                  $("#compile_begin_" + skey).html("0x" + asm.seg[skey].begin.toString(16));
                  $("#compile_end_"   + skey).html("0x" + asm.seg[skey].end.toString(16));
@@ -314,9 +314,12 @@
 	    if (chcklst.error != null)
 	        return show_popup1_content('Checklist', '<br><pre>' + chcklst.error + '</pre><br>') ;
 
-            var content = wepsim_checkreport2html(chcklst, false) ;
-            show_popup1_content('Checklist', content) ;
-    }   
+	    show_popup1_content('Checklist', 'Loading, please wait...') ;
+            setTimeout(function() {
+			    var content = wepsim_checkreport2html(chcklst, false) ;
+			    show_popup1_content('Checklist', content) ;
+                       }, 50);
+    }
 
     function show_comments_result ( index )
     {
@@ -325,7 +328,7 @@
                  return show_popup1_content('Comments', '<h1>Please &#181;check and wait for results.</h1>') ;
 
             show_popup1_content('Comments', comments) ;
-    }   
+    }
 
     function show_popup1_content ( title, content )
     {
@@ -334,5 +337,5 @@
 	    $('#popup1title').html(title) ;
 	    $('#popup1div').html(content) ;
 	    $('#popup1div').enhanceWithin() ;
-    }   
+    }
 
