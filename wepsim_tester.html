@@ -345,7 +345,7 @@
            <div class="modal-body">
 		<pre id="asm_test" 
 		     data-bind="text: asm_test" 
-		     style="overflow:scroll; max-height:80vh;"></pre>
+		     style="overflow:scroll; max-height:65vh;"></pre>
            </div>
            <div class="modal-footer">
                 <button type="button"
@@ -370,7 +370,7 @@
            <div class="modal-body">
 		<pre id="checklist" 
 		     data-bind="text: checklist"
-		     style="overflow:scroll; max-height:80vh;"></pre>
+		     style="overflow:scroll; max-height:65vh;"></pre>
            </div>
            <div class="modal-footer">
                 <button type="button"
@@ -392,7 +392,8 @@
 	    </li>
 	    <li class="option">
 	      <button class="material-button option2" type="button"
-                      onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
+                      onclick="model.mfiles.removeAll();
+                               wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
 	    </li>
 	    <li class="option">
 	      <button class="material-button option3" type="button"

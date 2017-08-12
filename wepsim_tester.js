@@ -83,11 +83,11 @@
 
     function add_comment ( i, stage, msg )
     {
-	model.mfiles()[i].CF(model.mfiles()[i].CF() + "(" + msg + ") ");
+	model.mfiles()[i].CF(model.mfiles()[i].CF() + msg + "<br><br>");
 
 	var old_msg = model.mfiles()[i].RC() ;
         if (old_msg == "\"NONE\"")
-             model.mfiles()[i].RC("\"" + stage + "\" ");
+             model.mfiles()[i].RC(          "\"" + stage + "\" ");
 	else model.mfiles()[i].RC(old_msg + "\"" + stage + "\" ");
 
 	old_msg = model.mfiles()[i].RC().replace("\" \"",", ");
@@ -263,9 +263,12 @@
 	    if (firm.error != null)
 	        return show_popup1_content('Firmware', '<br><pre>' + firm.error + '</pre><br>') ;
 
-	    var content = firmware2html(firm.firmware, false) ;
-            show_popup1_content('Firmware', content) ;
-    }   
+	    show_popup1_content('Firmware', 'Loading, please wait...') ;
+            setTimeout(function() {
+			    var content = firmware2html(firm.firmware, false) ;
+			    show_popup1_content('Firmware', content) ;
+                       }, 50);
+    }
 
     function show_asm_result ( index )
     {
