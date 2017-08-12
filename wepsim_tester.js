@@ -57,8 +57,11 @@
 	    for (var i=0; i<mfiles.length; i++)
             {
 		 fileReader[i] = new FileReader();
+		 fileReader[i].index  = i;
 		 fileReader[i].onload = function (fileLoadedEvent) {
-					    model.addFile(mfiles[i].name, fileLoadedEvent.target.result, '0',
+					    model.addFile(mfiles[this.index].name, 
+                                                          fileLoadedEvent.target.result, 
+                                                          '0',
 							  '', 'NONE', '', 'NONE', '', 'NONE', '', 'NONE') ;
 					};
 		 fileReader[i].readAsText(mfiles[i], "UTF-8");
@@ -132,12 +135,14 @@
 	model.mfiles()[i].CF(model.mfiles()[i].CF() + msg + "<br><br>");
 
 	var old_msg = model.mfiles()[i].RC() ;
-        if (old_msg == "\"NONE\"")
-             model.mfiles()[i].RC(          "\"" + stage + "\" ");
-	else model.mfiles()[i].RC(old_msg + "\"" + stage + "\" ");
+        if (old_msg == "NONE") 
+        {
+            model.mfiles()[i].RC("<ul><li>" + stage + "</li></ul>");
+            return ;
+        }
 
-	old_msg = model.mfiles()[i].RC().replace("\" \"",", ");
-        model.mfiles()[i].RC(old_msg);
+	old_msg = old_msg.replace("</li></ul>","</li>");
+	model.mfiles()[i].RC(old_msg + "<li>" + stage + "</li></ul>");
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
@@ -165,7 +170,9 @@
 	if (preSM.error != null)
 	{
                 model.mfiles()[i].RUC("1");
-                add_comment(i, "firmware error:"+preSM.error.split("(*)")[1], preSM.error);
+                add_comment(i, 
+                            "firmware error:"+preSM.error.split("(*)")[1], 
+                            preSM.error);
 
                 setTimeout(function() {
                              execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1);
@@ -182,7 +189,9 @@
 	if (SIMWAREaddon.error != null)
 	{
                 model.mfiles()[i].RE("1");
-                add_comment(i, "assembly error:"+SIMWAREaddon.error.split("(*)")[1], SIMWAREaddon.error);
+                add_comment(i, 
+                            "assembly error:"+SIMWAREaddon.error.split("(*)")[1], 
+                            SIMWAREaddon.error);
 
                 setTimeout(function() {
                               execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1);
@@ -208,7 +217,9 @@
         if (ret == false)
         {
             var msg1 = "more than 2048 clock cycles in one single instruction.";
-            add_comment(i, "execution error: " + msg1 + "<br>", msg1);
+            add_comment(i, 
+                        "execution error: " + msg1 + "<br>", 
+                        msg1);
 
             model.mfiles()[i].XF("<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2));
             model.mfiles()[i].RX(obj_result.errors + 1);
@@ -257,7 +268,7 @@
     {
 	    var firm_json = model.mfiles()[index].BF() ;
 	    if (firm_json == '')
-	        return show_popup1_content('Firmware', '<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Firmware', '<h1>Empty.</h1>') ;
 
 	    var firm = JSON.parse(firm_json) ;
 	    if (firm.error != null)
@@ -274,7 +285,7 @@
     {
 	    var asm_json = model.mfiles()[index].EF() ;
 	    if (asm_json == '')
-	        return show_popup1_content('Assembly', '<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Assembly', '<h1>Empty.</h1>') ;
 
 	    var asm = JSON.parse(asm_json) ;
 	    if (asm.error != null)
@@ -308,7 +319,7 @@
     {
 	    var chcklst_json = model.mfiles()[index].XF() ;
 	    if (chcklst_json == '')
-	        return show_popup1_content('Checklist', '<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Checklist', '<h1>Empty.</h1>') ;
 
 	    var chcklst = JSON.parse(chcklst_json) ;
 	    if (chcklst.error != null)
@@ -323,9 +334,9 @@
 
     function show_comments_result ( index )
     {
-	    var comments = model.mfiles()[index].CF() ;
+	    var comments = model.mfiles()[index].RC() ;
 	    if ( (comments== '') || (comments == null) )
-                 return show_popup1_content('Comments', '<h1>Please &#181;check and wait for results.</h1>') ;
+                 return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
 
             show_popup1_content('Comments', comments) ;
     }

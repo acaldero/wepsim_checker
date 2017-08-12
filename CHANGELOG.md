@@ -1,8 +1,8 @@
 
 2.0.0 -> 2.0.2:
 * Update the wepsim engine up to 1.8.2
-* Minor bugfix on memory checker
-* Minor improvements on the interface
+* Code has been rewritten from scratch: based on knockoutjs
+* Improvements on the user interface
 
 1.2.0 -> 2.0.0:
 * Update the wepsim engine to 1.8.1
