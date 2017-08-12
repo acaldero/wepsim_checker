@@ -23,38 +23,75 @@
     //  WepSIM checker API
     //
 
-    function load_firmware_from_files ( mfiles, tableDiv )
+    function wt_dataModel ()
     {
-	// HTML where related file information will be loaded...
-	var o = "" ;
-	for (var i=0; i<mfiles.length; i++) {
-             o = o + show_filerow(mfiles[i], i) ;
-	}
-	$(tableDiv).html(o);
+        var self = this;
 
-	// Read into the HTML generated...
-	var fileReader = new Array();
-	for (var i=0; i<mfiles.length; i++) {
-	     load_firmware_from_files_aux(mfiles, fileReader, i);
-	}
+	self.asm_test  = ko.observable(''),
+	self.checklist = ko.observable(''),
 
-        // notify user
-        $("#pbar1").attr('aria-valuenow', 0);
-        $("#pbar1").attr('aria-valuemin', 0);
-        $("#pbar1").attr('aria-valuemax', mfiles.length);
+        self.mfiles    = ko.observableArray([]),
+        self.addFile   = function(a,b,c,d,e,f,g,h,i,j,k) 
+                         {
+                            this.mfiles.push({ name:ko.observable(a),
+                                               LF:ko.observable(b),
+                                               RL:ko.observable(c),
+                                               BF:ko.observable(d),
+                                               RUC:ko.observable(e),
+                                               EF:ko.observable(f),
+                                               RE:ko.observable(g),
+                                               XF:ko.observable(h),
+                                               RX:ko.observable(i),
+                                               CF:ko.observable(j),
+                                               RC:ko.observable(k) }) ; 
+
+			    $("#pbar1").attr('aria-valuemax', this.mfiles().length);
+                         }
+    } ;
+
+    function wt_load_files ( id_mc, id_asm, id_checklst )
+    {
+	    // microcode
+	    mfiles = document.getElementById(id_mc).files;
+	    var fileReader = new Array();
+	    for (var i=0; i<mfiles.length; i++) {
+	         load_firmware_from_files_aux(mfiles, fileReader, i);
+	    }
+
+	    // assembly 
+	    if (document.getElementById(id_asm).files.length > 0) 
+            {
+	        var fileToLoad = document.getElementById(id_asm).files[0];
+	        var fileReader = new FileReader();
+	        fileReader.onload = function (fileLoadedEvent) {
+				       model.asm_test(fileLoadedEvent.target.result);
+				    };
+	        fileReader.readAsText(fileToLoad, 'UTF-8');
+            }
+
+	    // checklist
+	    if (document.getElementById(id_checklst).files.length > 0) 
+            {
+	        var fileToLoad = document.getElementById(id_checklst).files[0];
+	        var fileReader = new FileReader();
+	        fileReader.onload = function (fileLoadedEvent) {
+				       model.checklist(fileLoadedEvent.target.result);
+				    };
+	        fileReader.readAsText(fileToLoad, 'UTF-8');
+            }
     }
 
     function add_comment ( i, stage, msg )
     {
-	$("#CF" +i).text($("#CF"+i).text() + "(" + msg + ") ");
+	model.mfiles()[i].CF(model.mfiles()[i].CF() + "(" + msg + ") ");
 
-	var old_msg = $("#RC" +i).text();
+	var old_msg = model.mfiles()[i].RC() ;
         if (old_msg == "\"NONE\"")
-	     $("#RC" +i).text("\"" + stage + "\" ");
-	else $("#RC" +i).text(old_msg + "\"" + stage + "\" ");
+             model.mfiles()[i].RC("\"" + stage + "\" ");
+	else model.mfiles()[i].RC(old_msg + "\"" + stage + "\" ");
 
-	old_msg = $("#RC" +i).text().replace("\" \"",", ");
-	$("#RC" +i).text(old_msg);
+	old_msg = model.mfiles()[i].RC().replace("\" \"",", ");
+        model.mfiles()[i].RC(old_msg);
     }
 
     function execute_asm_and_firmware ( chk_limit )
@@ -111,32 +148,32 @@
         if (i >= neltos) 
             return;
 
-	var ita = $("#LF"+i);
-	if (ita.length == 0)
+	var ita = model.mfiles().length;
+	if (ita == 0)
             return;
 
         // load firmware
-	var ifirm = ita.text();
+	var ifirm = model.mfiles()[i].LF();
 	var preSM = loadFirmware(ifirm);
-	$("#BF"+i).text(JSON.stringify(preSM));
+        model.mfiles()[i].BF(JSON.stringify(preSM));
 	if (preSM.error != null)
 	{
-		$("#RUC"+i).text("1");
+                model.mfiles()[i].RUC("1");
                 add_comment(i, "firmware error:"+preSM.error.split("(*)")[1], preSM.error);
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
                 return;
 	}
-	$("#RUC"+i).text("0");
+        model.mfiles()[i].RUC("0");
         update_memories(preSM);
 
         // load assembly
 	var SIMWAREaddon = simlang_compile(asm_text, SIMWARE);
-	$("#EF"+i).text(JSON.stringify(SIMWAREaddon, null, 2));
-	$("#RE"+i).text("0");
+        model.mfiles()[i].EF(JSON.stringify(SIMWAREaddon, null, 2));
+        model.mfiles()[i].RE("0");
 	if (SIMWAREaddon.error != null) 
 	{
-		$("#RE"+i).text("1");
+                model.mfiles()[i].RE("1");
                 add_comment(i, "assembly error:"+SIMWAREaddon.error.split("(*)")[1], SIMWAREaddon.error);
 
                 setTimeout(function() { execute_firmwares_and_asm_i(SIMWARE, json_checklist, asm_text, i+1); }, 120);
@@ -163,13 +200,13 @@
             var msg1 = "more than 2048 clock cycles in one single instruction.";
             add_comment(i, "execution error: " + msg1 + "<br>", msg1);
 
-	    $("#XF"+i).text("<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2));
-	    $("#RX"+i).text(obj_result.errors + 1);
+            model.mfiles()[i].XF("<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2));
+            model.mfiles()[i].RX(obj_result.errors + 1);
         }
         else
         {
-	    $("#XF"+i).text(JSON.stringify(obj_result.result, null, 2));
-	    $("#RX"+i).text(obj_result.errors);
+            model.mfiles()[i].XF(JSON.stringify(obj_result.result, null, 2));
+            model.mfiles()[i].RX(obj_result.errors);
         }
 
         // next firmware
@@ -197,64 +234,18 @@
     {
 	 fileReader[i] = new FileReader();
 	 fileReader[i].onload = function (fileLoadedEvent) {
-				    var textFromFileLoaded = fileLoadedEvent.target.result;
-				    $("#LF"+i).text(textFromFileLoaded);
-				    $("#RL"+i).text('0');
+                                    model.addFile(mfiles[i].name, fileLoadedEvent.target.result, '0', 
+                                                  '', 'NONE', '', 'NONE', '', 'NONE', '', 'NONE') ;
 				};
 	 fileReader[i].readAsText(mfiles[i], "UTF-8");
     }   
 
-    function show_filerow ( mfile, i )
-    {
-	var o = "" ;
-
-	o = o + "<tr>" +
-		"<td>" + mfile.name + "</td>" +
-		"<td>" +
-		"    <div id='LF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
-		"    <a href='#' " + 
-		"       onclick=\"show_firm_origin(" + i + ");\"" +
-                "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RL" + i + "'>NONE</div></a>" + 
-		"</td>" +
-		"<td>" +
-		"    <div id='BF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
-		"    <a href='#' " + 
-		"       onclick=\"show_firm_result(" + i + ");\"" +
-                "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RUC" + i + "'>NONE</div></a>" + 
-		"</td>" +
-		"<td>" +
-		"    <div id='EF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
-		"    <a href='#' " + 
-		"       onclick=\"show_asm_result(" + i + ");\"" +
-                "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RE" + i + "'>NONE</div></a>" + 
-		"</td>" +
-		"<td>" +
-		"    <div id='XF" + i + "' style='display:none; max-height:80vh; max-width:80vw;'></div>" +
-		"    <a href='#' " + 
-		"       onclick=\"show_checklist_result(" + i + ");\"" +
-                "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RX" + i + "'>NONE</div></a>" + 
-		"</td>" +
-		"<td>" +
-		"    <div id='CF" + i + "' style='display:none;font-size:small; max-height:80vh; max-width:80vw;'></div>" +
-		"    <a href='#' " + 
-		"       onclick=\"show_comments_result(" + i + ");\"" +
-                "       data-position-to='windows' data-transition='none' " +
-		"       data-rel='popup'><div id='RC" + i + "'>\"NONE\"</div></a>" + 
-		"</td>" +
-		"</tr>" ;
-
-        return o ;
-    }
 
     // Auxiliar to show_filerow
 
     function show_firm_origin ( index )
     {
-	    var firm=$('#LF' + index).text() ;
+	    var firm= model.mfiles()[index].LF() ;
 	    if (firm == '')
 	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
@@ -264,7 +255,7 @@
 
     function show_firm_result ( index )
     {
-	    var firm_json=$('#BF' + index).text() ;
+	    var firm_json = model.mfiles()[index].BF() ;
 	    if (firm_json == '')
 	        return show_popup1_content('Firmware', '<h1>Please &#181;check and wait for results.</h1>') ;
 
@@ -278,7 +269,7 @@
 
     function show_asm_result ( index )
     {
-	    var asm_json=$('#EF' + index).text() ;
+	    var asm_json = model.mfiles()[index].EF() ;
 	    if (asm_json == '')
 	        return show_popup1_content('Assembly', '<h1>Please &#181;check and wait for results.</h1>') ;
 
@@ -312,7 +303,7 @@
 
     function show_checklist_result ( index )
     {
-	    var chcklst_json=$('#XF' + index).text() ;
+	    var chcklst_json = model.mfiles()[index].XF() ;
 	    if (chcklst_json == '')
 	        return show_popup1_content('Checklist', '<h1>Please &#181;check and wait for results.</h1>') ;
 
@@ -326,7 +317,7 @@
 
     function show_comments_result ( index )
     {
-	    var comments=$('#CF' + index).text() ;
+	    var comments = model.mfiles()[index].CF() ;
 	    if ( (comments== '') || (comments == null) )
                  return show_popup1_content('Comments', '<h1>Please &#181;check and wait for results.</h1>') ;
 

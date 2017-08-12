@@ -117,7 +117,7 @@
 			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" 
                                     data-rel="back">Cancel</a>
                         <button class="ui-btn ui-btn-b ui-btn-inline"
-                                onclick="load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');
+                                onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');
                                          $('#lsload8').popup('close');">Load from File</button>
                         </center>
 		    </div>
@@ -125,6 +125,7 @@
 
                 <br>
 
+<!--
                 <table data-role="table" id="tmfiles" data-mode="reflow" 
                        class="ui-responsive table-stroke table-bordered table-condensed table-hover">
                 <thead>
@@ -154,6 +155,72 @@
                  </tr>
                 </tbody>
                 </table>
+-->
+
+                <table data-role="table" id="tmfiles" data-mode="reflow" 
+                       class="ui-responsive table-stroke table-bordered table-condensed table-hover">
+                <thead>
+			<tr>
+			<th width=20%>File name</th>
+			<th width=10%>Load <br>firmware</th>
+			<th width=10%>&#181;compile firmware</th>
+			<th width=10%>Compilation &nbsp;
+				<a href="#"
+				   onclick="$('#show_asm_test').modal('show');">(Test)</a>
+				</th>
+			<th width=10%>Execution &nbsp;
+				<a href="#"
+				   onclick="$('#show_checklist').modal('show');">(Checklist)</a>
+				</th>
+			<th width=40%>Comments</th>
+			</tr>
+		</thead>
+		<tbody data-bind="foreach: mfiles">
+			<tr>
+				<td data-bind="text: name"></td>
+				<td>
+				    <a href='#'  
+                                       data-bind="attr: { data_index: $index() }"
+				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
+                                                show_firm_origin(index);"
+				       data-position-to='windows' data-transition='none' 
+				       data-rel='popup'><div data-bind="text: RL">NONE</div></a> 
+				</td>
+				<td>
+				    <a href='#'  
+                                       data-bind="attr: { data_index: $index() }"
+				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
+                                                show_firm_result(index);"
+				       data-position-to='windows' data-transition='none' 
+				       data-rel='popup'><div data-bind="text: RUC">NONE</div></a> 
+				</td>
+				<td>
+				    <a href='#'  
+                                       data-bind="attr: { data_index: $index() }"
+				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
+                                                show_asm_result(index);"
+				       data-position-to='windows' data-transition='none' 
+				       data-rel='popup'><div data-bind="text: RE">NONE</div></a> 
+				</td>
+				<td>
+				    <a href='#'  
+                                       data-bind="attr: { data_index: $index() }"
+				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
+                                                show_checklist_result(index);"
+				       data-position-to='windows' data-transition='none' 
+				       data-rel='popup'><div data-bind="text: RX">NONE</div></a> 
+				</td>
+				<td>
+				    <a href='#'  
+                                       data-bind="attr: { data_index: $index() }"
+				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
+                                                show_comments_result(index);"
+				       data-position-to='windows' data-transition='none' 
+				       data-rel='popup'><div data-bind="text: RC">NONE</div></a> 
+				</td>
+			</tr>
+		</tbody>
+		</table>
 
         </div><!-- /content -->
 
@@ -223,7 +290,7 @@
 		<input type="file" id="fileToLoad5b" /></li>
 
 	    <li><a href="#" style="background-color: lightgray"
-		   onclick="load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
+		   onclick="wt_load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
 		   data-rel="popup" data-position-to="origin" data-transition="none"
                    data-inline="true"><h2>Load files</h2><p>Load former files...</p></a></li>
 
@@ -325,7 +392,7 @@
 	    </li>
 	    <li class="option">
 	      <button class="material-button option2" type="button"
-                      onclick="load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
+                      onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
 	    </li>
 	    <li class="option">
 	      <button class="material-button option3" type="button"
@@ -339,46 +406,6 @@
 
 
 <script>
-    function load_files ( id_mc, id_asm, id_checklst )
-    {
-	    // microcode
-	    mfiles = document.getElementById(id_mc).files;
-	    load_firmware_from_files(mfiles, '#tbmfile');
-
-	    // assembly 
-	    var fileToLoad = document.getElementById(id_asm).files[0];
-	    var fileReader = new FileReader();
-	    fileReader.onload = function (fileLoadedEvent) {
-				   model.asm_test(fileLoadedEvent.target.result);
-				};
-	    fileReader.readAsText(fileToLoad, 'UTF-8');
-
-	    // checklist
-	    var fileToLoad = document.getElementById(id_checklst).files[0];
-	    var fileReader = new FileReader();
-	    fileReader.onload = function (fileLoadedEvent) {
-				   model.checklist(fileLoadedEvent.target.result);
-				};
-	    fileReader.readAsText(fileToLoad, 'UTF-8');
-    }
-
-
-    /*
-     *  Data model
-     */
-
-    var model = 
-    {
-	asm_test:  ko.observable(''),
-	checklist: ko.observable('')
-    } ;
-
-    ko.applyBindings(model);
-
-
-    /*
-     *  General Initialization
-     */
 
     restore_cfg();
 
@@ -396,9 +423,16 @@
             });
 
             $('.dropify').dropify();
-    }) ;
-</script>
 
+	    $("#pbar1").attr('aria-valuenow', 0);
+	    $("#pbar1").attr('aria-valuemin', 0);
+	    $("#pbar1").attr('aria-valuemax', 0);
+
+            model = new wt_dataModel();
+            ko.applyBindings(model);
+    }) ;
+
+</script>
 
 </body>
 
