@@ -256,51 +256,51 @@
     {
 	    var firm=$('#LF' + index).text() ;
 	    if (firm == '')
-	        return show_popup1_content('<br><pre>ERROR: Empty firmware.</pre><br>') ;
+	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
-            var content = '<div style="overflow:auto; height:75vh; width:75vw;"><pre>'+firm+'</pre><div>' ;
-            show_popup1_content(content) ;
+            var content = '<div style="overflow:auto; height:65vh;"><pre>'+firm+'</pre><div>' ;
+            show_popup1_content('Firmware', content) ;
     }   
 
     function show_firm_result ( index )
     {
 	    var firm_json=$('#BF' + index).text() ;
 	    if (firm_json == '')
-	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Firmware', '<h1>Please &#181;check and wait for results.</h1>') ;
 
 	    var firm = JSON.parse(firm_json) ;
 	    if (firm.error != null)
-	        return show_popup1_content('<br><pre>' + firm.error + '</pre><br>') ;
+	        return show_popup1_content('Firmware', '<br><pre>' + firm.error + '</pre><br>') ;
 
 	    var content = firmware2html(firm.firmware, false) ;
-            show_popup1_content(content) ;
+            show_popup1_content('Firmware', content) ;
     }   
 
     function show_asm_result ( index )
     {
 	    var asm_json=$('#EF' + index).text() ;
 	    if (asm_json == '')
-	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Assembly', '<h1>Please &#181;check and wait for results.</h1>') ;
 
 	    var asm = JSON.parse(asm_json) ;
 	    if (asm.error != null)
-	        return show_popup1_content('<br><pre>' + asm.error + '</pre><br>');
+	        return show_popup1_content('Assembly', '<br><pre>' + asm.error + '</pre><br>');
 
             var o = "<div class='row'>" +
                     "<div class='col-xs-3 col-sm-3'>" +
                     "<center><h3>Memory map</h3></center>" +
-                    "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto;'>" +
+                    "<div id='cc_map' style='overflow-y:scroll; overflow-x:auto; max-height:55vh;'>" +
                     "   <div id='compile_mm'>" + segments2html(asm.seg) + "</div>" +
                     "</div>" +
                     "</div>" +
                     "<div class='col-xs-9 col-sm-9'>" +
                     "<center><h3>Main memory</h3></center>" +
-                    "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; max-height:80vh;'>" +
+                    "<div id='cc_bin' style='overflow-y:scroll; overflow-x:auto; max-height:55vh;'>" +
                     "   <div id='compile_mp'>" + mp2html(asm.mp, asm.labels2, asm.seg) + "</div>" +
                     "</div>" +
                     "</div>" +
                     "</div>" ;
-            show_popup1_content(o) ;
+            show_popup1_content('Assembly', o) ;
 
             for (skey in asm.seg) 
             {
@@ -314,28 +314,30 @@
     {
 	    var chcklst_json=$('#XF' + index).text() ;
 	    if (chcklst_json == '')
-	        return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+	        return show_popup1_content('Checklist', '<h1>Please &#181;check and wait for results.</h1>') ;
 
 	    var chcklst = JSON.parse(chcklst_json) ;
 	    if (chcklst.error != null)
-	        return show_popup1_content('<br><pre>' + chcklst.error + '</pre><br>') ;
+	        return show_popup1_content('Checklist', '<br><pre>' + chcklst.error + '</pre><br>') ;
 
             var content = wepsim_checkreport2html(chcklst, false) ;
-            show_popup1_content(content) ;
+            show_popup1_content('Checklist', content) ;
     }   
 
     function show_comments_result ( index )
     {
 	    var comments=$('#CF' + index).text() ;
 	    if ( (comments== '') || (comments == null) )
-                 return show_popup1_content('<h1>Please &#181;check and wait for results.</h1>') ;
+                 return show_popup1_content('Comments', '<h1>Please &#181;check and wait for results.</h1>') ;
 
-            show_popup1_content(comments) ;
+            show_popup1_content('Comments', comments) ;
     }   
 
-    function show_popup1_content ( content )
+    function show_popup1_content ( title, content )
     {
-	    $('#popup1').popup('open') ;
+	    $('#popup1').modal('show') ;
+
+	    $('#popup1title').html(title) ;
 	    $('#popup1div').html(content) ;
 	    $('#popup1div').enhanceWithin() ;
     }   
