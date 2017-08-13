@@ -36,7 +36,8 @@ cat external/bootstrap.min.js \
     external/speech-input.js \
     external/annyang.min.js \
     external/speechkitt.min.js \
-    external/dropify.min.js > external/external.min.js
+    external/dropify.min.js \
+    external/propeller/propeller.min.js > external/external.min.js
 
 cat external/bootstrap.min.css \
     external/bootstrap-theme.min.css \
@@ -50,8 +51,10 @@ cat external/bootstrap.min.css \
     external/bootstrap-tokenfield.css \
     external/speech-input.css \
     external/speechkitt.css \
-    external/material-button.css \
-    external/dropify.min.css > external/external.min.css
+    external/dropify.min.css \
+    external/propeller/propeller.min.css \
+    external/propeller/propeller-fab-button.css \
+    external/propeller/propeller-fab.css > external/external.min.css
 
 # 
 #  wepsim_tester engine

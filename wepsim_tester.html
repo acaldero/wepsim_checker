@@ -327,14 +327,14 @@
 
 
 <div id="popup1" class="modal">
-     <div class="modal-dialog" style="width:95vw; height:80vh;">
+     <div class="modal-dialog" style="width:95vw; height:90vh;">
         <div class="modal-content">
            <div class="modal-header">
                 <button type="button" data-role="button"
                         class="close ui-btn-right ui-btn ui-btn-b ui-icon-delete ui-btn-icon-notext ui-corner-all"
                         data-dismiss="modal" aria-hidden="true">x</button>
                 <center>
-                <h4><span id="popup1title">&nbsp;</span></h4>
+                <h2><span id="popup1title">&nbsp;</span></h2>
                 </center>
            </div>
            <div class="modal-body">
@@ -352,14 +352,14 @@
 
 
 <div id="show_asm_test" class="modal">
-     <div class="modal-dialog" style="width:95vw; height:65vh;">
+     <div class="modal-dialog" style="width:95vw; height:90vh;">
         <div class="modal-content">
            <div class="modal-header">
                 <button type="button" data-role="button"
                         class="close ui-btn-right ui-btn ui-btn-b ui-icon-delete ui-btn-icon-notext ui-corner-all"
                         data-dismiss="modal" aria-hidden="true">x</button>
                 <center>
-                <h4>Assembly Test</h4>
+                <h2>Assembly Test</h2>
                 </center>
            </div>
            <div class="modal-body">
@@ -380,14 +380,14 @@
 
 
 <div id="show_checklist" class="modal">
-     <div class="modal-dialog" style="width:95vw; height:65vh;">
+     <div class="modal-dialog" style="width:95vw; height:90vh;">
         <div class="modal-content">
            <div class="modal-header">
                 <button type="button" data-role="button"
                         class="close ui-btn-right ui-btn ui-btn-b ui-icon-delete ui-btn-icon-notext ui-corner-all"
                         data-dismiss="modal" aria-hidden="true">x</button>
                 <center>
-                <h4>Checklist</h4>
+                <h2>Checklist</h2>
                 </center>
            </div>
            <div class="modal-body">
@@ -407,27 +407,39 @@
 </div> <!-- /.modal -->
 
 
-
-<div class="material-button-anim"
-     style="margin:0 0 0 0; padding:0 0 0 0; top:55vh; right:10px; z-index:5; position:absolute;">
-	  <ul class="list-inline" id="options">
-	    <li class="option">
-	      <button class="material-button option1" type="button"
-		      onclick="$('#lsload8').popup('open');">load</button>
-	    </li>
-	    <li class="option">
-	      <button class="material-button option2" type="button"
-                      onclick="model.mfiles.removeAll();
-                               wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');">re-load</button>
-	    </li>
-	    <li class="option">
-	      <button class="material-button option3" type="button"
-                      onclick="var checklist_text = model.checklist();
-			       var asm_text       = model.asm_test();
-			       execute_firmwares_and_asm(checklist_text,asm_text);">&#181;check</button>
-	    </li>
-	  </ul>
-	  <button class="material-button material-button-toggle" type="button">Men&uacute;</button>
+<!-- Floating Action Button like Google Material -->
+<!-- from: http://propeller.in/components/floating-button.php -->
+<div class="menu pmd-floating-action"  role="navigation"> 
+	<a href="javascript:void(0);" 
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" 
+	   onclick="model.mfiles.removeAll();
+		    wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');"
+           data-title="(step) Re-load files..."> 
+		<span class="pmd-floating-hidden">Re-load</span> 
+		<i class="material-icons">refresh</i> 
+	</a> 
+	<a href="javascript:void(0);" 
+           onclick="var checklist_text = model.checklist();
+	            var asm_text       = model.asm_test();
+	            execute_firmwares_and_asm(checklist_text, asm_text);"
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" 
+           data-title="step 2: Check firmwares..."> 
+		<span class="pmd-floating-hidden">&#181;check</span> 
+		<i class="material-icons">check</i>
+	</a> 
+	<a href="#"
+	   onclick="$('#lsload8').popup('open');"
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default" 
+           data-title="step 1: Load files..."> 
+		<span class="pmd-floating-hidden">Load</span>
+		<i class="material-icons">arrow_upward</i>
+	</a> 
+	<a href="javascript:void(0);"
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary pmd-z-depth-5" 
+           data-title="Quick Menu"> 
+		<span class="pmd-floating-hidden">Primary</span>
+		<i class="material-icons pmd-md">more_vert</i> 
+	</a> 
 </div>
 
 
