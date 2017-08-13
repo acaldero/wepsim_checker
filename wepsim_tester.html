@@ -312,6 +312,7 @@
       </ol>
 </div>
 
+
 <div id="popup1" class="modal">
      <div class="modal-dialog" style="width:95vw; height:80vh;">
         <div class="modal-content">
@@ -336,6 +337,7 @@
      </div>
 </div> <!-- /.modal -->
 
+
 <div id="show_asm_test" class="modal">
      <div class="modal-dialog" style="width:95vw; height:65vh;">
         <div class="modal-content">
@@ -348,9 +350,9 @@
                 </center>
            </div>
            <div class="modal-body">
-		<pre id="asm_test"
-		     data-bind="text: asm_test"
-		     style="overflow:scroll; max-height:65vh;"></pre>
+		<textarea id="asm_test"
+		          data-bind="text: asm_test"
+		          style="overflow:scroll; height:65vh; width:85vw;"></textarea>
            </div>
            <div class="modal-footer">
                 <button type="button"
@@ -360,6 +362,7 @@
         </div>
      </div>
 </div> <!-- /.modal -->
+
 
 <div id="show_checklist" class="modal">
      <div class="modal-dialog" style="width:95vw; height:65vh;">
@@ -373,9 +376,9 @@
                 </center>
            </div>
            <div class="modal-body">
-		<pre id="checklist"
-		     data-bind="text: checklist"
-		     style="overflow:scroll; max-height:65vh;"></pre>
+		<textarea id="checklist"
+		          data-bind="value: checklist"
+		          style="overflow:scroll; height:65vh; width:85vw;"></textarea>
            </div>
            <div class="modal-footer">
                 <button type="button"
