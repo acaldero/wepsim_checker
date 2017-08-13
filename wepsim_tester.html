@@ -106,15 +106,15 @@
                                   data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as assembly test:</h3>
-			<p><input type="file" id="fileToLoad3a" 
+			<p><input type="file" id="fileToLoad3a"
                                   data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as checklist:</h3>
-			<p><input type="file" id="fileToLoad5a" 
+			<p><input type="file" id="fileToLoad5a"
                                   data-max-height="100" class="dropify" /></p>
 
 			<center>
-			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" 
+			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b"
                                     data-rel="back">Cancel</a>
                         <button class="ui-btn ui-btn-b ui-btn-inline"
                                 onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');
@@ -126,7 +126,7 @@
                 <br>
 
 <!--
-                <table data-role="table" id="tmfiles" data-mode="reflow" 
+                <table data-role="table" id="tmfiles" data-mode="reflow"
                        class="ui-responsive table-stroke table-bordered table-condensed table-hover">
                 <thead>
                  <tr>
@@ -134,11 +134,11 @@
                  <th width=10%>Load <br>firmware</th>
                  <th width=10%>&#181;compile firmware</th>
                  <th width=10%>Compilation &nbsp;
-                        <a href="#" 
+                        <a href="#"
                            onclick="$('#show_asm_test').modal('show');">(Test)</a>
 			</th>
                  <th width=10%>Execution &nbsp;
-                        <a href="#" 
+                        <a href="#"
                            onclick="$('#show_checklist').modal('show');">(Checklist)</a>
 			</th>
                  <th width=40%>Comments</th>
@@ -157,7 +157,7 @@
                 </table>
 -->
 
-                <table data-role="table" id="tmfiles" data-mode="reflow" 
+                <table data-role="table" id="tmfiles" data-mode="reflow"
                        class="ui-responsive table-stroke table-bordered table-condensed table-hover">
                 <thead>
 			<tr>
@@ -165,12 +165,12 @@
 			<th width=10%>Load <br>firmware</th>
 			<th width=10%>&#181;compile firmware</th>
 			<th width=10%>Compilation &nbsp;
-				<a href="#"
-				   onclick="$('#show_asm_test').modal('show');">(Test)</a>
+				<span style="color:blue;"
+				      onclick="$('#show_asm_test').modal('show');">(Test)</span>
 				</th>
 			<th width=10%>Execution &nbsp;
-				<a href="#"
-				   onclick="$('#show_checklist').modal('show');">(Checklist)</a>
+				<span style="color:blue;"
+				      onclick="$('#show_checklist').modal('show');">(Checklist)</span>
 				</th>
 			<th width=40%>Comments</th>
 			</tr>
@@ -179,44 +179,49 @@
 			<tr>
 				<td data-bind="text: name"></td>
 				<td>
-				    <a href='#'  
+				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_firm_origin(index);"
-				       data-position-to='windows' data-transition='none' 
-				       data-rel='popup'><div data-bind="text: RL">NONE</div></a> 
+				       data-position-to='windows' data-transition='none'
+				       style="color:blue;"
+				       data-rel='popup'><div data-bind="text: RL">NONE</div></span>
 				</td>
 				<td>
-				    <a href='#'  
+				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_firm_result(index);"
-				       data-position-to='windows' data-transition='none' 
-				       data-rel='popup'><div data-bind="text: RUC">NONE</div></a> 
+				       data-position-to='windows' data-transition='none'
+				       style="color:blue;"
+				       data-rel='popup'><div data-bind="text: RUC">NONE</div></span>
 				</td>
 				<td>
-				    <a href='#'  
+				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_asm_result(index);"
-				       data-position-to='windows' data-transition='none' 
-				       data-rel='popup'><div data-bind="text: RE">NONE</div></a> 
+				       data-position-to='windows' data-transition='none'
+				       style="color:blue;"
+				       data-rel='popup'><div data-bind="text: RE">NONE</div></span>
 				</td>
 				<td>
-				    <a href='#'  
+				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_checklist_result(index);"
-				       data-position-to='windows' data-transition='none' 
-				       data-rel='popup'><div data-bind="text: RX">NONE</div></a> 
+				       data-position-to='windows' data-transition='none'
+				       style="color:blue;"
+				       data-rel='popup'><div data-bind="text: RX">NONE</div></span>
 				</td>
 				<td>
-				    <a href='#'  
+				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_comments_result(index);"
-				       data-position-to='windows' data-transition='none' 
-				       data-rel='popup'><div data-bind="text: RC">NONE</div></a> 
+				       data-position-to='windows' data-transition='none'
+				       style="color:blue;"
+				       data-rel='popup'><div data-bind="html: RC">NONE</div></span>
 				</td>
 			</tr>
 		</tbody>
@@ -234,8 +239,8 @@
    <h1><b>Web Elemental Processor SIMulator Tester</b> <span class="badge btn-success">2.0.2</span> </h1>
    </div>
    <div role="main" class="ui-content">
-        <table id="tabout2" 
-               data-role="table" data-mode="reflow" 
+        <table id="tabout2"
+               data-role="table" data-mode="reflow"
                class="ui-responsive" style="max-width:80vw;">
         <thead align=center>
         <tr>
@@ -319,7 +324,7 @@
                 </center>
            </div>
            <div class="modal-body">
-	        <div id='popup1div' 
+	        <div id='popup1div'
 	    	     style="overflow:auto; max-height:65vh; max-width:85vw;">Content is not loaded.</div>
            </div>
            <div class="modal-footer">
@@ -343,8 +348,8 @@
                 </center>
            </div>
            <div class="modal-body">
-		<pre id="asm_test" 
-		     data-bind="text: asm_test" 
+		<pre id="asm_test"
+		     data-bind="text: asm_test"
 		     style="overflow:scroll; max-height:65vh;"></pre>
            </div>
            <div class="modal-footer">
@@ -368,7 +373,7 @@
                 </center>
            </div>
            <div class="modal-body">
-		<pre id="checklist" 
+		<pre id="checklist"
 		     data-bind="text: checklist"
 		     style="overflow:scroll; max-height:65vh;"></pre>
            </div>
@@ -383,7 +388,7 @@
 
 
 
-<div class="material-button-anim" 
+<div class="material-button-anim"
      style="margin:0 0 0 0; padding:0 0 0 0; top:55vh; right:10px; z-index:5; position:absolute;">
 	  <ul class="list-inline" id="options">
 	    <li class="option">

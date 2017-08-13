@@ -34,15 +34,15 @@
         self.addFile   = function(a,b,c,d,e,f,g,h,i,j,k)
                          {
                             this.mfiles.push({ name:ko.observable(a),
-                                               LF:ko.observable(b),
+                                               LF:b,
                                                RL:ko.observable(c),
-                                               BF:ko.observable(d),
+                                               BF:d,
                                                RUC:ko.observable(e),
-                                               EF:ko.observable(f),
+                                               EF:f,
                                                RE:ko.observable(g),
-                                               XF:ko.observable(h),
+                                               XF:h,
                                                RX:ko.observable(i),
-                                               CF:ko.observable(j),
+                                               CF:j,
                                                RC:ko.observable(k) }) ;
 
 			    $("#pbar1").attr('aria-valuemax', this.mfiles().length);
@@ -52,41 +52,52 @@
     function wt_load_files ( id_mc, id_asm, id_checklst )
     {
 	    // microcode
-	    mfiles = document.getElementById(id_mc).files;
-	    var fileReader = new Array();
-	    for (var i=0; i<mfiles.length; i++)
+	    var mfiles1 = document.getElementById(id_mc).files;
+	    var fileReader1 = new Array();
+	    for (var i=0; i<mfiles1.length; i++)
             {
-		 fileReader[i] = new FileReader();
-		 fileReader[i].index  = i;
-		 fileReader[i].onload = function (fileLoadedEvent) {
-					    model.addFile(mfiles[this.index].name, 
-                                                          fileLoadedEvent.target.result, 
-                                                          '0',
-							  '', 'NONE', '', 'NONE', '', 'NONE', '', 'NONE') ;
+		 fileReader1[i] = new FileReader();
+		 fileReader1[i].index  = i;
+		 fileReader1[i].onload = function (fileLoadedEvent) {
+					   model.addFile(mfiles1[this.index].name, 
+                                                         fileLoadedEvent.target.result, 
+                                                         '0',
+							 '', 
+                                                         'NONE', 
+                                                         '', 
+                                                         'NONE', 
+                                                         '', 
+                                                         'NONE', 
+                                                         new Array(), 
+                                                         'NONE') ;
 					};
-		 fileReader[i].readAsText(mfiles[i], "UTF-8");
+		 fileReader1[i].readAsText(mfiles1[i], "UTF-8");
 	    }
 
 	    // assembly
-	    if (document.getElementById(id_asm).files.length > 0)
+	    var mfiles2 = document.getElementById(id_asm).files;
+	    var fileReader2 = new Array();
+	    for (var i=0; i<mfiles2.length; i++)
             {
-	        var fileToLoad = document.getElementById(id_asm).files[0];
-	        var fileReader = new FileReader();
-	        fileReader.onload = function (fileLoadedEvent) {
-				       model.asm_test(fileLoadedEvent.target.result);
-				    };
-	        fileReader.readAsText(fileToLoad, 'UTF-8');
+	        fileReader2[i] = new FileReader();
+	        fileReader2[i].index = i;
+	        fileReader2[i].onload = function (fileLoadedEvent) {
+				          model.asm_test(fileLoadedEvent.target.result);
+				       };
+	        fileReader2[i].readAsText(mfiles2[i], 'UTF-8');
             }
 
 	    // checklist
-	    if (document.getElementById(id_checklst).files.length > 0)
+	    var mfiles3 = document.getElementById(id_checklst).files;
+	    var fileReader3 = new Array();
+	    for (var i=0; i<mfiles3.length; i++)
             {
-	        var fileToLoad = document.getElementById(id_checklst).files[0];
-	        var fileReader = new FileReader();
-	        fileReader.onload = function (fileLoadedEvent) {
-				       model.checklist(fileLoadedEvent.target.result);
-				    };
-	        fileReader.readAsText(fileToLoad, 'UTF-8');
+	        fileReader3[i] = new FileReader();
+	        fileReader3[i].index = i;
+	        fileReader3[i].onload = function (fileLoadedEvent) {
+				          model.checklist(fileLoadedEvent.target.result);
+				       };
+	        fileReader3[i].readAsText(mfiles3[i], 'UTF-8');
             }
     }
 
@@ -132,7 +143,7 @@
 
     function add_comment ( i, stage, msg )
     {
-	model.mfiles()[i].CF(model.mfiles()[i].CF() + msg + "<br><br>");
+	model.mfiles()[i].CF.push(msg + "<br><br>");
 
 	var old_msg = model.mfiles()[i].RC() ;
         if (old_msg == "NONE") 
@@ -164,9 +175,9 @@
             return;
 
         // load firmware
-	var ifirm = model.mfiles()[i].LF();
+	var ifirm = model.mfiles()[i].LF;
 	var preSM = loadFirmware(ifirm);
-        model.mfiles()[i].BF(JSON.stringify(preSM));
+        model.mfiles()[i].BF = JSON.stringify(preSM);
 	if (preSM.error != null)
 	{
                 model.mfiles()[i].RUC("1");
@@ -184,7 +195,7 @@
 
         // load assembly
 	var SIMWAREaddon = simlang_compile(asm_text, SIMWARE);
-        model.mfiles()[i].EF(JSON.stringify(SIMWAREaddon, null, 2));
+        model.mfiles()[i].EF = JSON.stringify(SIMWAREaddon, null, 2);
         model.mfiles()[i].RE("0");
 	if (SIMWAREaddon.error != null)
 	{
@@ -221,12 +232,12 @@
                         "execution error: " + msg1 + "<br>", 
                         msg1);
 
-            model.mfiles()[i].XF("<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2));
+            model.mfiles()[i].XF = "<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2);
             model.mfiles()[i].RX(obj_result.errors + 1);
         }
         else
         {
-            model.mfiles()[i].XF(JSON.stringify(obj_result.result, null, 2));
+            model.mfiles()[i].XF = JSON.stringify(obj_result.result, null, 2);
             model.mfiles()[i].RX(obj_result.errors);
         }
 
@@ -253,7 +264,7 @@
 
     function show_firm_origin ( index )
     {
-	    var firm= model.mfiles()[index].LF() ;
+	    var firm= model.mfiles()[index].LF ;
 	    if (firm == '')
 	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
@@ -266,7 +277,7 @@
 
     function show_firm_result ( index )
     {
-	    var firm_json = model.mfiles()[index].BF() ;
+	    var firm_json = model.mfiles()[index].BF ;
 	    if (firm_json == '')
 	        return show_popup1_content('Firmware', '<h1>Empty.</h1>') ;
 
@@ -283,7 +294,7 @@
 
     function show_asm_result ( index )
     {
-	    var asm_json = model.mfiles()[index].EF() ;
+	    var asm_json = model.mfiles()[index].EF ;
 	    if (asm_json == '')
 	        return show_popup1_content('Assembly', '<h1>Empty.</h1>') ;
 
@@ -317,7 +328,7 @@
 
     function show_checklist_result ( index )
     {
-	    var chcklst_json = model.mfiles()[index].XF() ;
+	    var chcklst_json = model.mfiles()[index].XF ;
 	    if (chcklst_json == '')
 	        return show_popup1_content('Checklist', '<h1>Empty.</h1>') ;
 
@@ -334,7 +345,7 @@
 
     function show_comments_result ( index )
     {
-	    var comments = model.mfiles()[index].RC() ;
+	    var comments = '<ul><li>' + model.mfiles()[index].CF.join('</li><li>') + '</li></ul>';
 	    if ( (comments== '') || (comments == null) )
                  return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
 
