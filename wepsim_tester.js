@@ -143,7 +143,7 @@
 
     function add_comment ( i, stage, short_msg, large_msg )
     {
-	model.mfiles()[i].CF.push("<li>" + stage + ":</li><br><ul>" + large_msg + "</ul>");
+	model.mfiles()[i].CF.push("<li>" + stage + ":</li><br><ul>" + large_msg + "</ul><br>");
 
 	var old_msg = model.mfiles()[i].RC() ;
         if (old_msg == "NONE") 
@@ -349,11 +349,21 @@
 
     function show_comments_result ( index )
     {
-	    var comments = '<ul>' + model.mfiles()[index].CF.join('\n') + '</ul>';
-	    if ( (comments== '') || (comments == null) )
-                 return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
+	    var comments = model.mfiles()[index].CF.join('\n') ;
+	    if (comments== '') {
+                return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
+            }
 
-            show_popup1_content('Comments', comments) ;
+            comments = '<span class="label label-success"' +
+                       '      onclick="SelectText(\'comments_copy\'); document.execCommand(\'copy\');"' +
+                       '      data-inline="true">Copy to clipboard</span>' +
+                       '<span id="comments_copy">' +
+	               '<h2 style="margin:5 0 0 0">' + 
+                       'Report for \'' + model.mfiles()[index].name() + '\' firmware' + 
+                       '</h2>' +
+                       '<ul>' + comments + '</ul>' +
+                       '</span>' ;
+            return show_popup1_content('Comments', comments) ;
     }
 
     function show_popup1_content ( title, content )
