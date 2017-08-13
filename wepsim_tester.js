@@ -141,19 +141,19 @@
         return ret ;
     }
 
-    function add_comment ( i, stage, msg )
+    function add_comment ( i, stage, short_msg, large_msg )
     {
-	model.mfiles()[i].CF.push(msg + "<br><br>");
+	model.mfiles()[i].CF.push("<li>" + stage + ":</li><br><ul>" + large_msg + "</ul>");
 
 	var old_msg = model.mfiles()[i].RC() ;
         if (old_msg == "NONE") 
         {
-            model.mfiles()[i].RC("<ul><li>" + stage + "</li></ul>");
+            model.mfiles()[i].RC("<ul><li>" + stage + ": " + short_msg + "</li></ul>");
             return ;
         }
 
-	old_msg = old_msg.replace("</li></ul>","</li>");
-	model.mfiles()[i].RC(old_msg + "<li>" + stage + "</li></ul>");
+	old_msg = old_msg.replace("</li></ul>", "</li>");
+	model.mfiles()[i].RC(old_msg + "<li>" + stage + ": " + short_msg + "</li></ul>");
     }
 
     function execute_firmwares_and_asm_i ( SIMWARE, json_checklist, asm_text, i )
@@ -182,7 +182,8 @@
 	{
                 model.mfiles()[i].RUC("1");
                 add_comment(i, 
-                            "firmware error:"+preSM.error.split("(*)")[1], 
+                            "firmware error",
+                            preSM.error.split("(*)")[1], 
                             preSM.error);
 
                 setTimeout(function() {
@@ -201,7 +202,8 @@
 	{
                 model.mfiles()[i].RE("1");
                 add_comment(i, 
-                            "assembly error:"+SIMWAREaddon.error.split("(*)")[1], 
+                            "assembly error",
+                            SIMWAREaddon.error.split("(*)")[1], 
                             SIMWAREaddon.error);
 
                 setTimeout(function() {
@@ -221,7 +223,8 @@
         if (obj_result.errors != 0)
         {
             add_comment(i,
-                        "execution error:" + wepsim_checkreport2txt(obj_result.result),
+                        "execution error",
+                        wepsim_checkreport2txt(obj_result.result),
                         JSON.stringify(obj_result.result, null, 2));
         }
 
@@ -229,7 +232,8 @@
         {
             var msg1 = "more than 2048 clock cycles in one single instruction.";
             add_comment(i, 
-                        "execution error: " + msg1 + "<br>", 
+                        "execution error",
+                        msg1 + "<br>", 
                         msg1);
 
             model.mfiles()[i].XF = "<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2);
@@ -345,7 +349,7 @@
 
     function show_comments_result ( index )
     {
-	    var comments = '<ul><li>' + model.mfiles()[index].CF.join('</li><li>') + '</li></ul>';
+	    var comments = '<ul>' + model.mfiles()[index].CF.join('\n') + '</ul>';
 	    if ( (comments== '') || (comments == null) )
                  return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
 
