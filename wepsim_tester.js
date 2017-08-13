@@ -359,8 +359,8 @@
                        '      data-inline="true">Copy to clipboard</span>' +
                        '<span id="comments_copy">' +
 	               '<h2 style="margin:5 0 0 0">' + 
-                       'Report for \'' + model.mfiles()[index].name() + '\' firmware' + 
-                       '</h2>' +
+                       'Report for \'' + model.mfiles()[index].name() + '\' firmware:' + 
+                       '</h2><br>' +
                        '<ul>' + comments + '</ul>' +
                        '</span>' ;
             return show_popup1_content('Comments', comments) ;
