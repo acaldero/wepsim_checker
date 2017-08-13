@@ -225,7 +225,7 @@
             add_comment(i,
                         "execution error",
                         wepsim_checkreport2txt(obj_result.result),
-                        JSON.stringify(obj_result.result, null, 2));
+                        wepsim_checkreport2html(obj_result.result, true)) ;
         }
 
         if (ret == false)
