@@ -354,7 +354,7 @@
                 return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
             }
 
-            comments = '<span class="label label-success"' +
+            comments = '<span class="badge badge-success"' +
                        '      onclick="SelectText(\'comments_copy\'); document.execCommand(\'copy\');"' +
                        '      data-inline="true">Copy to clipboard</span>' +
                        '<span id="comments_copy">' +

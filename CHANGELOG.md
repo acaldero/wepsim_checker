@@ -1,4 +1,7 @@
 
+2.0.2 -> 2.0.3:
+* Update to bootstrap 4
+
 2.0.0 -> 2.0.2:
 * Update the wepsim engine up to 1.8.2
 * Code has been rewritten from scratch: based on knockoutjs

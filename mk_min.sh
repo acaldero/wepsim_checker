@@ -4,8 +4,11 @@ set -x
 # 
 #  external
 # 
-cat external/bootstrap.min.js \
+cat external/popper.min.js \
     external/bootstrap-notify.min.js \
+    external/bootstrap-select.min.js \
+    external/bootstrap-tokenfield.js \
+    external/bootstrap.v4.min.js \
     external/masonry.pkgd.min.js \
     external/knockout-3.4.2.js \
     external/jquery.knob.min.js \
@@ -31,24 +34,24 @@ cat external/bootstrap.min.js \
     external/codemirror.runmode/colorize.js \
     external/vis.min.js \
     external/async.js \
-    external/bootstrap-select.min.js \
-    external/bootstrap-tokenfield.js \
     external/speech-input.js \
     external/annyang.min.js \
     external/speechkitt.min.js \
     external/dropify.min.js \
     external/propeller/propeller.min.js > external/external.min.js
 
-cat external/bootstrap.min.css \
+cat external/bootstrap.v4.min.css \
     external/bootstrap-theme.min.css \
+    external/bootstrap-select.min.css \
+    external/bootstrap-tokenfield.css \
+    external/bootstrap-grid.min.css \
+    external/bootstrap-reboot.min.css \
     external/spectrum.min.css \
     external/codemirror.css \
     external/codemirror.theme/blackboard.css \
     external/codemirror.fold/foldgutter.css \
     external/codemirror.show-hint/codemirror.show-hint.css \
     external/vis-network.min.css \
-    external/bootstrap-select.min.css \
-    external/bootstrap-tokenfield.css \
     external/speech-input.css \
     external/speechkitt.css \
     external/dropify.min.css \
