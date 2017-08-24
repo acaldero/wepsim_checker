@@ -1,6 +1,7 @@
 
-2.0.2 -> 2.0.3:
+2.0.2 -> 2.0.5:
 * Update to bootstrap 4
+* Internal code updated: now input files and results are independent
 
 2.0.0 -> 2.0.2:
 * Update the wepsim engine up to 1.8.2
