@@ -106,11 +106,11 @@
                                   data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as assembly test:</h3>
-			<p><input type="file" id="fileToLoad3a"
+			<p><input type="file" id="fileToLoad3a" multiple
                                   data-max-height="100" class="dropify" /></p>
 
 			<h3>Please select the file to be used as checklist:</h3>
-			<p><input type="file" id="fileToLoad5a"
+			<p><input type="file" id="fileToLoad5a" multiple
                                   data-max-height="100" class="dropify" /></p>
 
 			<center>
@@ -133,18 +133,26 @@
                        class="ui-responsive table-stroke table-bordered table-sm table-hover">
                 <thead>
 			<tr>
-			<th width=20%>File name</th>
-			<th width=10%>Load <br>firmware</th>
-			<th width=10%>&#181;compile firmware</th>
-			<th width=10%>Compilation of
+			<th width="20%">File name</th>
+			<th>Load <br>firmware</th>
+			<th>&#181;compile firmware</th>
+		    <!-- ko foreach: asm_test -->
+			<th>Compilation of
 				<span style="color:blue;"
-				      onclick="show_asm_origin(0);">Test</span>
-				</th>
-			 <th width=10%>Execution vs
+                                      data-bind="attr: { data_index: $index() }"
+				      onclick="var index = parseInt(this.getAttribute('data_index'));
+				               show_asm_origin(index);">Test</span>
+			</th>
+		    <!-- /ko -->
+		    <!-- ko foreach: asm_test -->
+			<th>Execution vs
 				<span style="color:blue;"
-				      onclick="show_checklist_origin(0);">Checklist</span>
-				</th>
-			<th width=40%>Comments</th>
+                                      data-bind="attr: { data_index: $index() }"
+				      onclick="var index = parseInt(this.getAttribute('data_index'));
+				               show_checklist_origin(index);">Checklist</span>
+			</th>
+		    <!-- /ko -->
+			<th width="40%">Comments</th>
 			</tr>
 		</thead>
 		<tbody data-bind="foreach: mresults">
@@ -168,24 +176,30 @@
 				       style="color:blue;"
 				       data-rel='popup'><div data-bind="text: RUC">NONE</div></span>
 				</td>
+		    <!-- ko foreach: RE -->
 				<td>
 				    <span
-                                       data-bind="attr: { data_index: $index() }"
-				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
-                                                show_asm_result(index);"
+                                       data-bind="attr: { data_index_row: $parentContext.$index(),
+                                                          data_index_col: $index() }"
+				       onclick="var row = parseInt(this.getAttribute('data_index_row'));
+				                var col = parseInt(this.getAttribute('data_index_col'));
+                                                show_asm_result(row, col);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"
-				       data-rel='popup'><div data-bind="text: RE">NONE</div></span>
+				       style="color:blue;"><div data-bind="text: $data">NONE</div></span>
 				</td>
+		    <!-- /ko -->
+		    <!-- ko foreach: RX -->
 				<td>
 				    <span
-                                       data-bind="attr: { data_index: $index() }"
-				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
-                                                show_checklist_result(index);"
+                                       data-bind="attr: { data_index_row: $parentContext.$index(),
+                                                          data_index_col: $index() }"
+				       onclick="var row = parseInt(this.getAttribute('data_index_row'));
+				                var col = parseInt(this.getAttribute('data_index_col'));
+                                                show_checklist_result(row, col);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"
-				       data-rel='popup'><div data-bind="text: RX">NONE</div></span>
+				       style="color:blue;"><div data-bind="text: $data">NONE</div></span>
 				</td>
+		    <!-- /ko -->
 				<td>
 				    <span
                                        data-bind="attr: { data_index: $index() }"
@@ -223,23 +237,18 @@
                 <input type="file" id="filesToLoadb" multiple/></li>
 
 	    <li><h1>Assembly file</h1>
-		<input type="file" id="fileToLoad3b" /></li>
+		<input type="file" id="fileToLoad3b" multiple/></li>
 
 	    <li><h1>Checklist file</h1>
-		<input type="file" id="fileToLoad5b" /></li>
+		<input type="file" id="fileToLoad5b" multiple/></li>
 
 	    <li><a href="#" style="background-color: lightgray"
-	           onclick="model.mresults.removeAll();
-                            model.asm_test = new Array();
-                            model.checklist = new Array();
-                            model.mfiles = new Array();
-                            model.checklist_bin = new Array();
-		            wt_load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
+	           onclick="wt_load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
 		   data-rel="popup" data-position-to="origin" data-transition="none"
                    data-inline="true"><h2>Load files</h2><p>Load former files...</p></a></li>
 
 	    <li><a href="#" style="background-color: lightgray"
-                   onclick="execute_firmwares_and_asm(model.checklist_bin, model.asm_test);"
+                   onclick="execute_firmwares_and_asm(model.checklist_bin, model.asm_test());"
 		   data-inline="true"><h2>&#181;check</h2><p>Check microcodes...</p></a></li>
       </ol>
 
@@ -360,18 +369,13 @@
 <div class="menu pmd-floating-action"  role="navigation"> 
 	<a href="javascript:void(0);" 
            class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-secondary" 
-	   onclick="model.mresults.removeAll();
-                    model.asm_test = new Array();
-                    model.checklist = new Array();
-                    model.mfiles = new Array();
-                    model.checklist_bin = new Array();
-		    wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');"
+	   onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');"
            data-title="(step) Re-load files..."> 
 		<span class="pmd-floating-hidden">Re-load</span> 
 		<i class="material-icons">refresh</i> 
 	</a> 
 	<a href="javascript:void(0);" 
-           onclick="execute_firmwares_and_asm(model.checklist_bin, model.asm_test);"
+           onclick="execute_firmwares_and_asm(model.checklist_bin, model.asm_test());"
            class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-secondary" 
            data-title="step 2: Check firmwares..."> 
 		<span class="pmd-floating-hidden">&#181;check</span> 

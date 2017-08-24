@@ -27,7 +27,7 @@
     {
         var self = this ;
 
-        self.asm_test  = new Array() ;
+        self.asm_test  = ko.observableArray([]) ;
         self.addAsm    = function(a,b) {
                             this.asm_test.push({ name:a, content:b }) ;
                          } ;
@@ -46,18 +46,18 @@
                          } ;
 
         self.mresults  = ko.observableArray([]) ;
-        self.addResult = function(a,b,c,d,e,f,g,h,i,j,k)
+        self.addResult = function(a,b,c,d,e,f,g,h,i,j)
                          {
                             this.mresults.push({ name:ko.observable(a),
-                                                 RL:ko.observable(c),
-                                                 BF:d,
-                                                 RUC:ko.observable(e),
-                                                 EF:f,
-                                                 RE:ko.observable(g),
-                                                 XF:h,
-                                                 RX:ko.observable(i),
-                                                 CF:j,
-                                                 RC:ko.observable(k) }) ;
+                                                 RL:ko.observable(b),
+                                                 BF:c,
+                                                 RUC:ko.observable(d),
+                                                 EF:e,
+                                                 RE:ko.observableArray(f),
+                                                 XF:g,
+                                                 RX:ko.observableArray(h),
+                                                 CF:i,
+                                                 RC:ko.observable(j) }) ;
 
 			     $("#pbar1").attr('aria-valuemax', this.mresults().length);
                          } ;
@@ -65,25 +65,40 @@
 
     function wt_load_files ( id_mc, id_asm, id_checklst )
     {
-            // results
 	    var mfiles1 = document.getElementById(id_mc).files;
+	    var mfiles2 = document.getElementById(id_asm).files;
+	    var mfiles3 = document.getElementById(id_checklst).files;
+
+            model.mresults.removeAll();
+            model.mfiles = new Array();
+            model.asm_test.removeAll();
+            model.checklist = new Array();
+            model.checklist_bin = new Array();
+
+            // results
 	    for (var i=0; i<mfiles1.length; i++)
             {
+                 var f = new Array() ;
+                 var h = new Array() ;
+	         for (var j=0; j<mfiles2.length; j++) 
+	         {
+		      f.push(ko.observable('NONE'));
+		      h.push(ko.observable('NONE'));
+	         }
+
 		 model.addResult('Loading microcode file name...',
-				 'Loading microcode content...',
 				 '0',
-				 '', 
-				 'NONE', 
-				 '', 
-				 'NONE', 
-				 '', 
-				 'NONE', 
-				 new Array(), 
+				 '',
+				 'NONE',
+				 new Array(''),
+				 f,
+				 new Array(''),
+				 h,
+				 new Array(),
 				 'NONE') ;
 	    }
 
 	    // microcode
-	    var mfiles1 = document.getElementById(id_mc).files;
 	    var fileReader1 = new Array();
 	    for (var i=0; i<mfiles1.length; i++)
             {
@@ -98,29 +113,27 @@
 	    }
 
 	    // assembly
-	    var mfiles2 = document.getElementById(id_asm).files;
 	    var fileReader2 = new Array();
 	    for (var i=0; i<mfiles2.length; i++)
             {
 	        fileReader2[i] = new FileReader();
 	        fileReader2[i].index = i;
 	        fileReader2[i].onload = function (fileLoadedEvent) {
-					    model.addAsm(mfiles2[this.index].name, 
-				                         fileLoadedEvent.target.result);
+					     model.addAsm(mfiles2[this.index].name, 
+				                          fileLoadedEvent.target.result);
 				       };
 	        fileReader2[i].readAsText(mfiles2[i], 'UTF-8');
             }
 
 	    // checklist
-	    var mfiles3 = document.getElementById(id_checklst).files;
 	    var fileReader3 = new Array();
 	    for (var i=0; i<mfiles3.length; i++)
             {
 	        fileReader3[i] = new FileReader();
 	        fileReader3[i].index = i;
 	        fileReader3[i].onload = function (fileLoadedEvent) {
-					    model.addCheck(mfiles3[this.index].name, 
-				                           fileLoadedEvent.target.result);
+					     model.addCheck(mfiles3[this.index].name, 
+				                            fileLoadedEvent.target.result);
 				       };
 	        fileReader3[i].readAsText(mfiles3[i], 'UTF-8');
             }
@@ -231,12 +244,11 @@
 
         // load assemblyi 
 	var SIMWAREaddon = simlang_compile(assemblies_arr[j].content, SIMWARE);
-//TODO: EF,RE,etc.[j...]
-        model.mresults()[i].EF = JSON.stringify(SIMWAREaddon, null, 2);
-        model.mresults()[i].RE("0");
+        model.mresults()[i].EF[j] = JSON.stringify(SIMWAREaddon, null, 2);
+        model.mresults()[i].RE()[j]("0");
 	if (SIMWAREaddon.error != null)
 	{
-                model.mresults()[i].RE("1");
+                model.mresults()[i].RE()[j]("1");
                 add_comment(i, 
                             "assembly error",
                             SIMWAREaddon.error.split("(*)")[1], 
@@ -273,13 +285,13 @@
                         msg1 + "<br>", 
                         msg1);
 
-            model.mresults()[i].XF = "<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2);
-            model.mresults()[i].RX(obj_result.errors + 1);
+            model.mresults()[i].XF[j] = "<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2);
+            model.mresults()[i].RX()[j](obj_result.errors + 1);
         }
         else
         {
-            model.mresults()[i].XF = JSON.stringify(obj_result.result, null, 2);
-            model.mresults()[i].RX(obj_result.errors);
+            model.mresults()[i].XF[j] = JSON.stringify(obj_result.result, null, 2);
+            model.mresults()[i].RX()[j](obj_result.errors);
         }
 
         // next firmware
@@ -304,7 +316,9 @@
 
     function show_firm_origin ( index )
     {
-	    var firm= model.mfiles[index].content ;
+	    var firm = '' ;
+            if (typeof model.mfiles[index] != "undefined")
+	        firm = model.mfiles[index].content ;
 	    if (firm == '')
 	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
@@ -335,8 +349,8 @@
     function show_asm_origin ( index )
     {
 	    var asm_test = '' ;
-            if (typeof model.asm_test[index] != "undefined")
-                asm_test  = model.asm_test[index].content ;
+            if (typeof model.asm_test()[index] != "undefined")
+                asm_test  = model.asm_test()[index].content ;
 	    if (asm_test  == '')
 	        return show_popup1_content('Assembly code', '<br><pre>ERROR: Empty assembly code.</pre><br>') ;
 
@@ -347,9 +361,11 @@
                        }, 50);
     }
 
-    function show_asm_result ( index )
+    function show_asm_result ( index_i, index_j )
     {
-	    var asm_json = model.mresults()[index].EF ;
+	    var asm_json = '' ;
+	    if (typeof model.mresults()[index_i] != "undefined")
+	        asm_json = model.mresults()[index_i].EF[index_j] ;
 	    if (asm_json == '')
 	        return show_popup1_content('Assembly', '<h1>Empty.</h1>') ;
 
@@ -396,9 +412,11 @@
                        }, 50);
     }
 
-    function show_checklist_result ( index )
+    function show_checklist_result ( index_i, index_j )
     {
-	    var chcklst_json = model.mresults()[index].XF ;
+	    var chcklst_json = '' ;
+	    if (typeof model.mresults()[index_i] != "undefined")
+	        chcklst_json = model.mresults()[index_i].XF[index_j] ;
 	    if (chcklst_json == '')
 	        return show_popup1_content('Checklist', '<h1>Empty.</h1>') ;
 
@@ -415,7 +433,9 @@
 
     function show_comments_result ( index )
     {
-	    var comments = model.mresults()[index].CF.join('\n') ;
+	    var comments = '' ;
+	    if (typeof model.mresults()[index] != "undefined")
+	        comments = model.mresults()[index].CF.join('\n') ;
 	    if (comments== '') {
                 return show_popup1_content('Comments', '<h1>Empty.</h1>') ;
             }
