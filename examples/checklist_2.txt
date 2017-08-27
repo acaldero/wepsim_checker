@@ -1,4 +1,3 @@
-register R1 = 0x1047 ;
 register R2 = 0x6 ;
 register R3 = 0x3 ;
 register R4 = 0x2 ;

@@ -114,8 +114,8 @@
                                   data-max-height="100" class="dropify" /></p>
 
 			<center>
-			<a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b"
-                                    data-rel="back">Cancel</a>
+                        <button class="ui-btn ui-btn-b ui-btn-inline"
+                                onclick="$('#lsload8').popup('close');">Cancel</button>
                         <button class="ui-btn ui-btn-b ui-btn-inline"
                                 onclick="wt_load_files('filesToLoada', 'fileToLoad3a', 'fileToLoad5a');
                                          $('#lsload8').popup('close');">Load from File</button>
@@ -129,27 +129,28 @@
                                document.execCommand('copy');"
 		      data-inline="true">Copy to clipboard</span>
 
-                <table data-role="table" id="tmfiles" data-mode="reflow"
-                       class="ui-responsive table-stroke table-bordered table-sm table-hover">
+	<div class="table-responsive">
+                <table data-role="none" id="tmfiles"
+                       class="table table-stroke table-bordered table-sm table-hover table-condensed">
                 <thead>
 			<tr>
 			<th width="20%">File name</th>
 			<th>Load <br>firmware</th>
 			<th>&#181;compile firmware</th>
 		    <!-- ko foreach: asm_test -->
-			<th>Compilation of
-				<span style="color:blue;"
-                                      data-bind="attr: { data_index: $index() }"
-				      onclick="var index = parseInt(this.getAttribute('data_index'));
-				               show_asm_origin(index);">Test</span>
+			<th>Compiling
+			    <span style="color:blue;"
+			          data-bind="attr: { data_index: $index() }"
+			          onclick="var index = parseInt(this.getAttribute('data_index'));
+				           show_asm_origin(index);"><span data-bind="text: name"></span></span>
 			</th>
 		    <!-- /ko -->
-		    <!-- ko foreach: asm_test -->
+		    <!-- ko foreach: checklist -->
 			<th>Execution vs
-				<span style="color:blue;"
-                                      data-bind="attr: { data_index: $index() }"
-				      onclick="var index = parseInt(this.getAttribute('data_index'));
-				               show_checklist_origin(index);">Checklist</span>
+			    <span style="color:blue;"
+			          data-bind="attr: { data_index: $index() }"
+			          onclick="var index = parseInt(this.getAttribute('data_index'));
+				           show_checklist_origin(index);"><span data-bind="text: name"></span></span>
 			</th>
 		    <!-- /ko -->
 			<th width="40%">Comments</th>
@@ -212,6 +213,7 @@
 			</tr>
 		</tbody>
 		</table>
+	</div>
 
         </div><!-- /content -->
 

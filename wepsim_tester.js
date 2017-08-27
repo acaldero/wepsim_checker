@@ -32,7 +32,7 @@
                             this.asm_test.push({ name:a, content:b }) ;
                          } ;
 
-	self.checklist     = new Array() ;
+        self.checklist     = ko.observableArray([]) ;
 	self.checklist_bin = new Array() ;
         self.addCheck  = function(a,b) {
                             var c = wepsim_checklist2state(b) ;
@@ -72,7 +72,7 @@
             model.mresults.removeAll();
             model.mfiles = new Array();
             model.asm_test.removeAll();
-            model.checklist = new Array();
+            model.checklist.removeAll();
             model.checklist_bin = new Array();
 
             // results
@@ -400,8 +400,8 @@
     function show_checklist_origin ( index )
     {
 	    var checklist= '' ;
-            if (typeof model.checklist[index] != "undefined")
-                checklist = model.checklist[index].content ;
+            if (typeof model.checklist()[index] != "undefined")
+                checklist = model.checklist()[index].content ;
 	    if (checklist == '')
 	        return show_popup1_content('Check-list', '<br><pre>ERROR: Empty checklist.</pre><br>') ;
 

@@ -1,3 +1,7 @@
+#
+# Example code 2
+#
+
 .kdata
    vector:  .word rti0
             .word rti1
