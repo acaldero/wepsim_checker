@@ -354,10 +354,15 @@
 	    if (asm_test  == '')
 	        return show_popup1_content('Assembly code', '<br><pre>ERROR: Empty assembly code.</pre><br>') ;
 
-	    show_popup1_content('Assembly code', 'Loading, please wait...') ;
+	    show_popup2_content('Assembly code', 'Loading, please wait...') ;
             setTimeout(function() {
-			   var content = '<div style="overflow:auto; height:65vh;"><pre>'+asm_test+'</pre><div>';
-			   show_popup1_content('Assembly code', content) ;
+			   var content = '<div class="form-group" style="height:55vh;">' +
+			                 '<input type=hidden id="element" value="model.asm_test()[' + index + '].content">' + 
+			                 '<textarea class="form-control" ' + 
+			                 '          id="content" ' + 
+			                 '          style="overflow:auto;">' + asm_test + '</textarea>' +
+			                 '</div>' ;
+			   show_popup2_content('Assembly code', content) ;
                        }, 50);
     }
 
@@ -403,12 +408,17 @@
             if (typeof model.checklist()[index] != "undefined")
                 checklist = model.checklist()[index].content ;
 	    if (checklist == '')
-	        return show_popup1_content('Check-list', '<br><pre>ERROR: Empty checklist.</pre><br>') ;
+	        return show_popup1_content('Checklist', '<br><pre>ERROR: Empty checklist.</pre><br>') ;
 
-	    show_popup1_content('Assembly code', 'Loading, please wait...') ;
+	    show_popup1_content('Checklist', 'Loading, please wait...') ;
             setTimeout(function() {
-			  var content = '<div style="overflow:auto; height:65vh;"><pre>'+checklist+'</pre><div>';
-			  show_popup1_content('Check-list', content) ;
+			   var content = '<div class="form-group" style="height:55vh;">' +
+			                 '<input type=hidden id="element" value="model.checklist()[' + index + '].content">' + 
+			                 '<textarea class="form-control" ' + 
+			                 '          id="content" ' + 
+			                 '          style="overflow:auto;">' + checklist + '</textarea>' +
+			                 '</div>' ;
+			   show_popup1_content('Checklist', content) ;
                        }, 50);
     }
 
@@ -459,5 +469,14 @@
 	    $('#popup1title').html(title) ;
 	    $('#popup1div').html(content) ;
 	    $('#popup1div').enhanceWithin() ;
+    }
+
+    function show_popup2_content ( title, content )
+    {
+	    $('#popup2').modal('show') ;
+
+	    $('#popup2title').html(title) ;
+	    $('#popup2div').html(content) ;
+	    $('#popup2div').enhanceWithin() ;
     }
 

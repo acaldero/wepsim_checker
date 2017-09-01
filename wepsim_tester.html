@@ -77,7 +77,7 @@
 		<div id="button_bar" data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
                     <a href="#" onclick="$('#about2').modal('show');"><img src="images/arcos.svg" height="40"></a>
 		</div>
-	        <span class="ui-title"><b>WepSIM Checker</b> <span class="badge">2.0.5</span> </span>
+	        <span class="ui-title"><b>WepSIM Checker</b> <span class="badge">2.0.10</span> </span>
 		<div id="version_bar" data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
                     <a href="#actions_panel"
                        class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-gear ui-btn-icon-left">Menu</a>
@@ -270,7 +270,7 @@
                         data-dismiss="modal" aria-hidden="true">x</button>
                 <center>
                 <h1 class="modal-title col-12 text-center"><b>WepSIM Checker</b>&nbsp;
-                    <span class="badge btn-success">2.0.5</span>
+                    <span class="badge btn-success">2.0.10</span>
                 </h1>
                 </center>
            </div>
@@ -359,6 +359,33 @@
            <div class="modal-footer">
                 <button type="button"
                         onclick="$('#popup1').modal('hide');"
+                        class="btn btn-primary col-xs-3 pull-right">&nbsp;&nbsp;OK&nbsp;&nbsp;</button>
+           </div>
+        </div>
+     </div>
+</div> <!-- /.modal -->
+
+
+<div id="popup2" class="modal">
+     <div class="modal-lg modal-dialog" style="width:95vw; height:90vh;">
+        <div class="modal-content">
+           <div class="modal-header">
+                <button type="button" data-role="button"
+                        class="close ui-btn-right ui-btn ui-btn-b ui-icon-delete ui-btn-icon-notext ui-corner-all"
+                        data-dismiss="modal" aria-hidden="true">x</button>
+                <center>
+                <h2 class="modal-title col-12 text-center"><span id="popup2title">&nbsp;</span></h2>
+                </center>
+           </div>
+           <div class="modal-body">
+	        <div id='popup2div'
+	    	     style="overflow:auto; max-height:65vh; max-width:85vw;">Content is not loaded.</div>
+           </div>
+           <div class="modal-footer">
+                <button type="button"
+                        onclick="$('#popup2').modal('hide');
+			         var todo = $('#element').val() + ' = $(\'#content\').val()';
+				 eval(todo);"
                         class="btn btn-primary col-xs-3 pull-right">&nbsp;&nbsp;OK&nbsp;&nbsp;</button>
            </div>
         </div>
