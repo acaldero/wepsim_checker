@@ -413,7 +413,10 @@
 	    show_popup2_content('Checklist', 'Loading, please wait...') ;
             setTimeout(function() {
 			   var content = '<div class="form-group" style="height:55vh;">' +
-			                 '<input type=hidden id="todo2" value="model.checklist()[' + index + '].content = $(\'#content\').val();">' + 
+			                 '<input type=hidden id="todo2" ' + 
+			                 '       value="var nval = $(\'#content\').val(); ' + 
+			                 '              model.checklist()[' + index + '].content = nval; ' + 
+			                 '              model.checklist_bin[' + index + '].content = wepsim_checklist2state(nval);">' + 
 			                 '<textarea class="form-control" ' + 
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + checklist + '</textarea>' +
