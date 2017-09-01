@@ -60,9 +60,9 @@ cat external/bootstrap.v4.min.css \
     external/propeller/propeller-fab.css > external/external.min.css
 
 # 
-#  wepsim_tester engine
+#  wepsim_checker engine
 # 
-cat wepsim_tester.js > sim_tester_all.js
-/usr/bin/yui-compressor -o min.sim_tester.js sim_tester_all.js
-rm -fr sim_tester_all.js
+cat wepsim_checker.js > sim_checker_all.js
+/usr/bin/yui-compressor -o min.sim_checker.js sim_checker_all.js
+rm -fr sim_checker_all.js
 
