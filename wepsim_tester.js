@@ -49,7 +49,7 @@
         self.addResult = function(a,b,c,d,e,f,g,h,i,j)
                          {
                             this.mresults.push({ name:ko.observable(a),
-                                                 RL:ko.observable(b),
+                                                 RL:b,
                                                  BF:c,
                                                  RUC:ko.observable(d),
                                                  EF:e,
@@ -357,7 +357,7 @@
 	    show_popup2_content('Assembly code', 'Loading, please wait...') ;
             setTimeout(function() {
 			   var content = '<div class="form-group" style="height:55vh;">' +
-			                 '<input type=hidden id="element" value="model.asm_test()[' + index + '].content">' + 
+			                 '<input type=hidden id="todo2" value="model.asm_test()[' + index + '].content = $(\'#content\').val();">' + 
 			                 '<textarea class="form-control" ' + 
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + asm_test + '</textarea>' +
@@ -410,15 +410,15 @@
 	    if (checklist == '')
 	        return show_popup1_content('Checklist', '<br><pre>ERROR: Empty checklist.</pre><br>') ;
 
-	    show_popup1_content('Checklist', 'Loading, please wait...') ;
+	    show_popup2_content('Checklist', 'Loading, please wait...') ;
             setTimeout(function() {
 			   var content = '<div class="form-group" style="height:55vh;">' +
-			                 '<input type=hidden id="element" value="model.checklist()[' + index + '].content">' + 
+			                 '<input type=hidden id="todo2" value="model.checklist()[' + index + '].content = $(\'#content\').val();">' + 
 			                 '<textarea class="form-control" ' + 
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + checklist + '</textarea>' +
 			                 '</div>' ;
-			   show_popup1_content('Checklist', content) ;
+			   show_popup2_content('Checklist', content) ;
                        }, 50);
     }
 

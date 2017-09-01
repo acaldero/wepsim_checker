@@ -135,7 +135,6 @@
                 <thead>
 			<tr>
 			<th width="20%">File name</th>
-			<th>Load <br>firmware</th>
 			<th>&#181;compile firmware</th>
 		    <!-- ko foreach: asm_test -->
 			<th>Compiling
@@ -158,15 +157,13 @@
 		</thead>
 		<tbody data-bind="foreach: mresults">
 			<tr>
-				<td data-bind="text: name"></td>
 				<td>
 				    <span
                                        data-bind="attr: { data_index: $index() }"
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_firm_origin(index);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"
-				       data-rel='popup'><div data-bind="text: RL">NONE</div></span>
+				       style="color:blue;"><span data-bind="text: name">NONE</span></span>
 				</td>
 				<td>
 				    <span
@@ -174,8 +171,7 @@
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_firm_result(index);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"
-				       data-rel='popup'><div data-bind="text: RUC">NONE</div></span>
+				       style="color:blue;"><div data-bind="text: RUC">NONE</div></span>
 				</td>
 		    <!-- ko foreach: RE -->
 				<td>
@@ -207,8 +203,7 @@
 				       onclick="var index = parseInt(this.getAttribute('data_index')) ;
                                                 show_comments_result(index);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"
-				       data-rel='popup'><div data-bind="html: RC">NONE</div></span>
+				       style="color:blue;"><div data-bind="html: RC">NONE</div></span>
 				</td>
 			</tr>
 		</tbody>
@@ -383,9 +378,7 @@
            </div>
            <div class="modal-footer">
                 <button type="button"
-                        onclick="$('#popup2').modal('hide');
-			         var todo = $('#element').val() + ' = $(\'#content\').val()';
-				 eval(todo);"
+                        onclick="$('#popup2').modal('hide'); eval($('#todo').val());"
                         class="btn btn-primary col-xs-3 pull-right">&nbsp;&nbsp;OK&nbsp;&nbsp;</button>
            </div>
         </div>
