@@ -2,6 +2,9 @@
 2.0.5 -> 2.0.10:
 * Editable Assembly test and checklist
 * 'Load microcode' has been integrated into the 'File name'
+* From 'wepsim-tester' to 'wepsim-checker'
+* Initial README.md
+* GNU Licence files added
 
 2.0.2 -> 2.0.5:
 * Update to bootstrap 4
