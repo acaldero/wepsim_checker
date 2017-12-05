@@ -181,7 +181,8 @@
 
     function add_comment ( i, stage, short_msg, large_msg )
     {
-	model.mresults()[i].CF.push("<li>" + stage + ":</li><br><ul>" + large_msg + "</ul><br>");
+	short_msg = short_msg.replace(/<br>/g,"\n") ;
+	model.mresults()[i].CF.push("<li>" + stage + ":</li><ul>" + large_msg + "</ul>");
 
 	var old_msg = model.mresults()[i].RC() ;
         if (old_msg == "NONE") 
@@ -220,6 +221,9 @@
                            execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i+1, 0);
                        }, 120);
             return;
+        }
+        if (typeof checklist_bin_arr[j] == "undefined") {
+	    return show_popup1_content('CheckList', '<br><pre>ERROR: Each assembly code needs its associated checklist.</pre><br>') ;
         }
 
         // load firmware
