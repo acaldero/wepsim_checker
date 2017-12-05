@@ -254,7 +254,7 @@
 	{
                 model.mresults()[i].RE()[j]("1");
                 add_comment(i, 
-                            "assembly error",
+                            "assembly error on " + assemblies_arr[j].name,
                             SIMWAREaddon.error.split("(*)")[1], 
                             SIMWAREaddon.error);
 
@@ -276,7 +276,7 @@
         if (obj_result.errors != 0)
         {
             add_comment(i,
-                        "execution error",
+                        "execution error on " + assemblies_arr[j].name,
                         wepsim_checkreport2txt(obj_result.result),
                         wepsim_checkreport2html(obj_result.result, true)) ;
         }
@@ -285,7 +285,7 @@
         {
             var msg1 = "more than " + cycles_limit + " clock cycles in one single instruction.";
             add_comment(i, 
-                        "execution error",
+                        "execution error on " + assemblies_arr[j].name,
                         msg1 + "<br>", 
                         msg1);
 
