@@ -272,7 +272,7 @@
 
         // compare with expected results
         var obj_current = wepsim_current2state();
-        var obj_result  = wepsim_diff_results(checklist_bin_arr[j].content, obj_current) ;
+        var obj_result  = wepsim_check_results(checklist_bin_arr[j].content, obj_current, false) ;
         if (obj_result.errors != 0)
         {
             add_comment(i,
