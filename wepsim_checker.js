@@ -40,7 +40,7 @@
                             this.checklist_bin.push({ name:a, content:c }) ;
                          } ;
 
-        self.mfiles    = new Array() ;
+        self.mfiles    = ko.observableArray([]) ;
         self.addMicro  = function(a,b) {
                             this.mfiles.push({ name:a, content:b }) ;
                          } ;
@@ -70,7 +70,7 @@
 	    var mfiles3 = document.getElementById(id_checklst).files;
 
             model.mresults.removeAll();
-            model.mfiles = new Array();
+            model.mfiles.removeAll();
             model.asm_test.removeAll();
             model.checklist.removeAll();
             model.checklist_bin = new Array();
@@ -227,7 +227,7 @@
         }
 
         // load firmware
-	var ifirm = model.mfiles[i].content;
+	var ifirm = model.mfiles()[i].content;
 	var preSM = loadFirmware(ifirm);
         model.mresults()[i].BF = JSON.stringify(preSM);
 	if (preSM.error != null)
@@ -321,15 +321,20 @@
     function show_firm_origin ( index )
     {
 	    var firm = '' ;
-            if (typeof model.mfiles[index] != "undefined")
-	        firm = model.mfiles[index].content ;
+            if (typeof model.mfiles()[index] != "undefined")
+	        firm = model.mfiles()[index].content ;
 	    if (firm == '')
 	        return show_popup1_content('Firmware', '<br><pre>ERROR: Empty firmware.</pre><br>') ;
 
-	    show_popup1_content('Firmware', 'Loading, please wait...') ;
+	    show_popup2_content('Firmware', 'Loading, please wait...') ;
             setTimeout(function() {
-			   var content = '<div style="overflow:auto; height:65vh;"><pre>'+firm+'</pre><div>' ;
-			   show_popup1_content('Firmware', content) ;
+			   var content = '<div class="form-group" style="height:55vh;">' +
+			                 '<input type=hidden id="todo2" value="model.mfiles()[' + index + '].content = $(\'#content\').val();">' + 
+			                 '<textarea class="form-control" ' + 
+			                 '          id="content" ' + 
+			                 '          style="overflow:auto;">' + firm + '</textarea>' +
+			                 '</div>' ;
+			   show_popup2_content('Firmware (' + model.mfiles()[index].name + ')', content) ;
                        }, 50);
     }
 
@@ -366,7 +371,7 @@
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + asm_test + '</textarea>' +
 			                 '</div>' ;
-			   show_popup2_content('Assembly code', content) ;
+			   show_popup2_content('Assembly code (' + model.asm_test()[index].name + ')', content) ;
                        }, 50);
     }
 
@@ -425,7 +430,7 @@
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + checklist + '</textarea>' +
 			                 '</div>' ;
-			   show_popup2_content('Checklist', content) ;
+			   show_popup2_content('Checklist (' + model.checklist()[index].name + ')', content) ;
                        }, 50);
     }
 
