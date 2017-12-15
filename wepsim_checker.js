@@ -142,7 +142,7 @@
     function execute_asm_and_firmware ( chk_limit )
     {
         // execute firmware-assembly
-        init("","","","");
+        init("","","","","");
 	reset() ;
 
 	var reg_pc        = sim_states["REG_PC"].value ;
