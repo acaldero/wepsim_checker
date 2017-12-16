@@ -139,10 +139,14 @@
             }
     }
 
-    function execute_asm_and_firmware ( chk_limit )
+    function execute_asm_and_firmware ( ins_limit, clk_limit )
     {
+	var ret = new Object() ;
+	    ret.error = false ;
+	    ret.msg   = "" ;
+
         // execute firmware-assembly
-        init("","","","","");
+        init("","","","","") ;
 	reset() ;
 
 	var reg_pc        = sim_states["REG_PC"].value ;
@@ -162,15 +166,30 @@
 	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
 	      kcode_end = parseInt(segments['.ktext'].end) ;
 
-        var ret = true ;
+	var ins_executed = 0 ; 
+        var ok = true ;
 	while (
-                       (ret) &&
-                       (reg_pc != reg_pc_before) &&
-                     ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
-                       ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
-                  )
+                    (ok) &&
+                    (reg_pc != reg_pc_before)  &&
+                  ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
+                    ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
+              )
 	{
-	       ret = execute_microprogram(chk_limit) ;
+	       ok = execute_microprogram(clk_limit) ;
+               if (false == ok)
+	       {
+	           ret.error = true ;
+	           ret.msg   = "more than " + clk_limit + " clock cycles in one single instruction.";
+		   return ret ;
+	       }
+
+	       ins_executed++ ; 
+               if (ins_executed > ins_limit) 
+	       {
+	           ret.error = true ;
+	           ret.msg   = "more than " + ins_limit + " instructions executed before application ends.";
+		   return ret ;
+	       }
 
 	       reg_pc_before = reg_pc ;
 	       reg_pc = sim_states["REG_PC"].value ;
@@ -267,8 +286,9 @@
 	update_memories(SIMWARE) ;
 
         // execute firmware-assembly
-        var cycles_limit = 2048 ;
-        var ret = execute_asm_and_firmware(cycles_limit) ;
+        var cycles_limit = 1024 ;
+        var instructions_limit = 1000 ;
+        var ret = execute_asm_and_firmware(instructions_limit, cycles_limit) ;
 
         // compare with expected results
         var obj_current = wepsim_current2state();
@@ -281,15 +301,14 @@
                         wepsim_checkreport2html(obj_result.result, true)) ;
         }
 
-        if (ret == false)
+        if (ret.error == true)
         {
-            var msg1 = "more than " + cycles_limit + " clock cycles in one single instruction.";
             add_comment(i, 
                         "execution error on " + assemblies_arr[j].name,
-                        msg1 + "<br>", 
-                        msg1);
+                        ret.msg + "<br>", 
+                        ret.msg);
 
-            model.mresults()[i].XF[j] = "<pre>ERROR: " + msg1 + "</pre><br>" + JSON.stringify(obj_result.result,null,2);
+            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + JSON.stringify(obj_result.result, null, 2);
             model.mresults()[i].RX()[j](obj_result.errors + 1);
         }
         else
