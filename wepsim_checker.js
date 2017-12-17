@@ -167,19 +167,14 @@
 	      kcode_end = parseInt(segments['.ktext'].end) ;
 
 	var ins_executed = 0 ; 
-        var ok = true ;
 	while (
-                    (ok) &&
-                    (reg_pc != reg_pc_before)  &&
+                     (reg_pc != reg_pc_before)  &&
                   ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
                     ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
               )
 	{
-	       ok = execute_microprogram(clk_limit) ;
-               if (false == ok)
-	       {
-	           ret.error = true ;
-	           ret.msg   = "more than " + clk_limit + " clock cycles in one single instruction.";
+	       ret = execute_microprogram(clk_limit) ;
+               if (false == ret.ok) {
 		   return ret ;
 	       }
 
