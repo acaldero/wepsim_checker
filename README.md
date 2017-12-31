@@ -1,5 +1,7 @@
 # WepSIM Checker
 
+[![Build Status](https://travis-ci.org/acaldero/wepsim_checker.svg?branch=master)](https://travis-ci.org/acaldero/wepsim_checker)
+
 + Get WepSIM Checker:
 
    * (on-line) Web version (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, and Apple Safari 10+): <br/>
