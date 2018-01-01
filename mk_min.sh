@@ -69,5 +69,10 @@ rm -fr sim_checker_all.js
 # 
 #  wepsim_node engine
 # 
-cat min.sim_info.js min.sim_hw.js min.sim_all.js min.wepsim.js wepsim_node.js > min.wepsim_node.js
+cat min.sim_info.js \
+    min.sim_hw.js \
+    min.sim_all.js \
+    min.wepsim.js \
+    wepsim_core.js \
+    wepsim_node.js > min.wepsim_node.js
 

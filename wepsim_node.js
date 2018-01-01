@@ -19,200 +19,64 @@
  */
 
     /**
-     * Initialize WepSIM core
+     * WepSIM nodejs
      */
-    function wepsim_nodejs_init ( )
+
+    function wepsim_nodejs_check ( str_firmware, str_assembly, str_resultok, 
+                                   max_instructions, max_cycles )
     {
-        reset_cfg() ;
-        stop_drawing() ;
+        var ret1 = {} ;
+            ret1.ok = true ;
+            ret1.msg = "" ;
 
-        check_behavior();
-        compile_behaviors() ;
-        firedep_to_fireorder(jit_fire_dep) ;
-        compute_references() ;
-    }
+	// 1) initialize ws
+        wepsim_core_reset() ;
 
-    /**
-     * Reset the WepSIM simulation
-     */
-    function wepsim_nodejs_reset ( )
-    {
-	var SIMWARE = get_simware() ;
-        compute_general_behavior("RESET") ;
-
-        if ((typeof segments['.ktext'] != "undefined") && (SIMWARE.labels2["kmain"])){
-                    set_value(sim_states["REG_PC"], parseInt(SIMWARE.labels2["kmain"]));
-	}
-        else if ((typeof segments['.text'] != "undefined") && (SIMWARE.labels2["main"])){
-                    set_value(sim_states["REG_PC"], parseInt(SIMWARE.labels2["main"]));
-	}
-
-	if ( (typeof segments['.stack'] != "undefined") &&
-             (typeof sim_states["BR"][FIRMWARE.stackRegister] != "undefined") )
+	// 2) load firmware
+        var ret = wepsim_core_compile_firmware(str_firmware) ;
+	if (false == ret.ok) 
 	{
-		set_value(sim_states["BR"][FIRMWARE.stackRegister], parseInt(segments['.stack'].begin));
+            ret1.msg = "Firmware ERROR: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
 	}
 
-	var mode = get_cfg('ws_mode');
-	if ('webmips' != mode) {
-            compute_general_behavior("CLOCK") ;
-	}
-    }
-
-    /**
-     * Compile Firmware
-     * @param {string} textToMCompile - The firmware to be compile and loaded into memory
-     */
-    function wepsim_nodejs_compile_firmware ( textToMCompile )
-    {
-	var ret = new Object() ;
-	    ret.msg = "" ;
-	    ret.ok  = true ;
-
-	var preSM = load_firmware(textToMCompile) ;
-	if (preSM.error != null)
+	// 3) load assembly
+        ret = wepsim_core_compile_assembly(str_assembly) ;
+	if (false == ret.ok) 
         {
-            ret.msg = preSM.error ;
-            ret.ok  = false ;
-            return ret ;
+            ret1.msg = "Assembly ERROR: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 4) execute firmware-assembly
+	ret = wepsim_core_execute(max_instructions, max_cycles) ;
+	if (true == ret.error) 
+	{
+            ret1.msg = "ERROR: cannot execute the assembly and firmware.\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 5) compare with expected results
+        var result1 = wepsim_core_check_results(str_resultok) ;
+	var report1 = wepsim_core_show_checkresults(result1, "text", true) ;
+	if (result1.errors != 0) 
+	{
+            console.log("\nERROR: different results:\n" + report1 + "\n") ;
+            ret1.ok = false ;
+	    return ret1 ;
         }
 
-	wepsim_nodejs_reset() ;
-        return ret ;
+	return ret1 ;
     }
+
 
     /**
-     * Compile Assembly
-     * @param {string} textToCompile - The assembly to be compile and loaded into memory
+     * Export API
      */
-    function wepsim_nodejs_compile_assembly ( textToCompile )
-    {
-	var ret = new Object() ;
-	    ret.msg = "" ;
-	    ret.ok  = true ;
 
-        // get SIMWARE.firmware
-        var SIMWARE = get_simware() ;
-	if (SIMWARE.firmware.length == 0)
-        {
-            ret.msg = 'WARNING: please load the microcode first.' ;
-            ret.ok  = false;
-            return ret;
-	}
-
-        // compile Assembly and show message
-        var SIMWAREaddon = simlang_compile(textToCompile, SIMWARE);
-        if (SIMWAREaddon.error != null)
-        {
-            ret.msg = SIMWAREaddon.error ;
-            ret.ok  = false;
-            return ret;
-        }
-
-        // update memory and segments
-        set_simware(SIMWAREaddon) ;
-	update_memories(SIMWARE) ;
-	wepsim_nodejs_reset() ;
-        return ret ;
-    }
-
-    /**
-     * Execute the assembly previously compiled and loaded
-     * @param {integer} ins_limit - The limit of instructions to be executed
-     * @param {integer} clk_limit - The limit of clock cycles per instruction
-     */
-    function wepsim_nodejs_execute ( ins_limit, clk_limit )
-    {
-	var ret = new Object() ;
-	    ret.error = false ;
-	    ret.msg   = "" ;
-
-        // execute firmware-assembly
-        wepsim_nodejs_init() ;
-	wepsim_nodejs_reset() ;
-
-	var reg_pc        = get_value(sim_states["REG_PC"]) ;
-	var reg_pc_before = get_value(sim_states["REG_PC"]) - 4 ;
-
-	var code_begin  = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
-	      code_begin = parseInt(segments['.text'].begin) ;
-	var code_end    = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
-	      code_end = parseInt(segments['.text'].end) ;
-
-	var kcode_begin = 0 ;
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
-	      kcode_begin = parseInt(segments['.ktext'].begin) ;
-	var kcode_end   = 0 ;
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
-	      kcode_end = parseInt(segments['.ktext'].end) ;
-
-	var ins_executed = 0 ; 
-	while (
-                     (reg_pc != reg_pc_before)  &&
-                  ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
-                    ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
-              )
-	{
-	       ret = execute_microprogram(clk_limit) ;
-               if (false == ret.ok) {
-		   return ret ;
-	       }
-
-	       ins_executed++ ; 
-               if (ins_executed > ins_limit) 
-	       {
-	           ret.error = true ;
-	           ret.msg   = "more than " + ins_limit + " instructions executed before application ends.";
-		   return ret ;
-	       }
-
-	       reg_pc_before = reg_pc ;
-	       reg_pc = get_value(sim_states["REG_PC"]) ;
-	}
-
-        return ret ;
-    }
-
-    /**
-     * Check that the current state meets the specifications
-     * @param {object} checklist_ok - Correct state specifications
-     */
-    function wepsim_nodejs_check_results ( checklist_ok )
-    {
-	var data3_bin   = wepsim_checklist2state(checklist_ok) ;
-	var obj_current = wepsim_current2state();
-	var obj_result  = wepsim_check_results(data3_bin, obj_current, true) ;
-
-	// console.log(JSON.stringify(obj_result.result, null, 2));
-
-        return obj_result ;
-    }
-
-    /**
-     * Check that the current state meets the specifications
-     * @param {object}  checkresults - Results checked
-     * @param {string}  show_format - "HTML" or "txt"
-     * @param {boolean} show_onlyerrors - True if only errors has to been shown
-     */
-    function wepsim_nodejs_show_checkresults ( checkresults, show_format, show_onlyerrors )
-    {
-	if (show_format.toUpperCase() == "HTML") {
-            return wepsim_checkreport2html(checkresults, show_onlyerrors) ;
-	}
-
-        return wepsim_checkreport2txt(checkresults.result) ;
-    }
-
-
-    // export API
-    module.exports.wepsim_nodejs_init              = wepsim_nodejs_init ;
-    module.exports.wepsim_nodejs_reset             = wepsim_nodejs_reset ;
-    module.exports.wepsim_nodejs_compile_firmware  = wepsim_nodejs_compile_firmware ;
-    module.exports.wepsim_nodejs_compile_assembly  = wepsim_nodejs_compile_assembly ;
-    module.exports.wepsim_nodejs_execute           = wepsim_nodejs_execute ;
-    module.exports.wepsim_nodejs_check_results     = wepsim_nodejs_check_results ;
-    module.exports.wepsim_nodejs_show_checkresults = wepsim_nodejs_show_checkresults ;
-
+    module.exports.wepsim_nodejs_init   = wepsim_core_init ;
+    module.exports.wepsim_nodejs_check  = wepsim_nodejs_check ;
 

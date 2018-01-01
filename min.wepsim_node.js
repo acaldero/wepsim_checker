@@ -21,7 +21,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
     /**
      * Initialize WepSIM core
      */
-    function wepsim_nodejs_init ( )
+    function wepsim_core_init ( )
     {
         reset_cfg() ;
         stop_drawing() ;
@@ -35,7 +35,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
     /**
      * Reset the WepSIM simulation
      */
-    function wepsim_nodejs_reset ( )
+    function wepsim_core_reset ( )
     {
 	var SIMWARE = get_simware() ;
         compute_general_behavior("RESET") ;
@@ -63,7 +63,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * Compile Firmware
      * @param {string} textToMCompile - The firmware to be compile and loaded into memory
      */
-    function wepsim_nodejs_compile_firmware ( textToMCompile )
+    function wepsim_core_compile_firmware ( textToMCompile )
     {
 	var ret = new Object() ;
 	    ret.msg = "" ;
@@ -77,7 +77,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
             return ret ;
         }
 
-	wepsim_nodejs_reset() ;
+	wepsim_core_reset() ;
         return ret ;
     }
 
@@ -85,7 +85,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * Compile Assembly
      * @param {string} textToCompile - The assembly to be compile and loaded into memory
      */
-    function wepsim_nodejs_compile_assembly ( textToCompile )
+    function wepsim_core_compile_assembly ( textToCompile )
     {
 	var ret = new Object() ;
 	    ret.msg = "" ;
@@ -112,7 +112,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
         // update memory and segments
         set_simware(SIMWAREaddon) ;
 	update_memories(SIMWARE) ;
-	wepsim_nodejs_reset() ;
+	wepsim_core_reset() ;
         return ret ;
     }
 
@@ -121,15 +121,15 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * @param {integer} ins_limit - The limit of instructions to be executed
      * @param {integer} clk_limit - The limit of clock cycles per instruction
      */
-    function wepsim_nodejs_execute ( ins_limit, clk_limit )
+    function wepsim_core_execute ( ins_limit, clk_limit )
     {
 	var ret = new Object() ;
 	    ret.error = false ;
 	    ret.msg   = "" ;
 
         // execute firmware-assembly
-        wepsim_nodejs_init() ;
-	wepsim_nodejs_reset() ;
+        wepsim_core_init() ;
+	wepsim_core_reset() ;
 
 	var reg_pc        = get_value(sim_states["REG_PC"]) ;
 	var reg_pc_before = get_value(sim_states["REG_PC"]) - 4 ;
@@ -179,7 +179,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * Check that the current state meets the specifications
      * @param {object} checklist_ok - Correct state specifications
      */
-    function wepsim_nodejs_check_results ( checklist_ok )
+    function wepsim_core_check_results ( checklist_ok )
     {
 	var data3_bin   = wepsim_checklist2state(checklist_ok) ;
 	var obj_current = wepsim_current2state();
@@ -196,7 +196,7 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * @param {string}  show_format - "HTML" or "txt"
      * @param {boolean} show_onlyerrors - True if only errors has to been shown
      */
-    function wepsim_nodejs_show_checkresults ( checkresults, show_format, show_onlyerrors )
+    function wepsim_core_show_checkresults ( checkresults, show_format, show_onlyerrors )
     {
 	if (show_format.toUpperCase() == "HTML") {
             return wepsim_checkreport2html(checkresults, show_onlyerrors) ;
@@ -205,14 +205,37 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
         return wepsim_checkreport2txt(checkresults.result) ;
     }
 
+/*
+ *  Copyright 2015-2018 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
+ *
+ *  This file is part of WepSIM tester.
+ *
+ *  WepSIM is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WepSIM is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with WepSIM.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
-    // export API
-    module.exports.wepsim_nodejs_init              = wepsim_nodejs_init ;
-    module.exports.wepsim_nodejs_reset             = wepsim_nodejs_reset ;
-    module.exports.wepsim_nodejs_compile_firmware  = wepsim_nodejs_compile_firmware ;
-    module.exports.wepsim_nodejs_compile_assembly  = wepsim_nodejs_compile_assembly ;
-    module.exports.wepsim_nodejs_execute           = wepsim_nodejs_execute ;
-    module.exports.wepsim_nodejs_check_results     = wepsim_nodejs_check_results ;
-    module.exports.wepsim_nodejs_show_checkresults = wepsim_nodejs_show_checkresults ;
+    /**
+     * Export API
+     */
 
+    module.exports.wepsim_nodejs_init              = wepsim_core_init ;
+    module.exports.wepsim_nodejs_reset             = wepsim_core_reset ;
+
+    module.exports.wepsim_nodejs_compile_firmware  = wepsim_core_compile_firmware ;
+    module.exports.wepsim_nodejs_compile_assembly  = wepsim_core_compile_assembly ;
+    module.exports.wepsim_nodejs_execute           = wepsim_core_execute ;
+
+    module.exports.wepsim_nodejs_check_results     = wepsim_core_check_results ;
+    module.exports.wepsim_nodejs_show_checkresults = wepsim_core_show_checkresults ;
 
