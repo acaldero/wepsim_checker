@@ -182,7 +182,7 @@
         {
             setTimeout(function() {
                            execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i+1, 0);
-                       }, 120);
+                       }, 100);
             return;
         }
         if (typeof checklist_bin_arr[j] == "undefined") {
@@ -203,7 +203,7 @@
 
                 setTimeout(function() {
                              execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1);
-                           }, 120);
+                           }, 100);
                 return;
 	}
         model.mresults()[i].RUC("0");
@@ -223,7 +223,7 @@
 
                 setTimeout(function() {
                               execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1);
-                           }, 120);
+                           }, 100);
                 return;
 	}
 	set_simware(SIMWAREaddon) ;
@@ -266,7 +266,7 @@
         // next firmware
         setTimeout(function() { 
                       execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1); 
-                   }, 120);
+                   }, 100);
     }
 
     function execute_firmwares_and_asm ( checklist_bin_arr, assemblies_arr )
