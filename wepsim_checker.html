@@ -400,11 +400,27 @@
 	   <input type="text" size="5" data-bind="value: CFG_instructions_limit"/>&nbsp; instructions
 	   </p>
 	</a> 
+
+	<a href="javascript:void(0);" 
+           onclick="execute_firmwares_and_asm(model.checklist_bin, model.asm_test());"
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-secondary" 
+           data-title="step 2: Check firmwares..."> 
+		<span class="pmd-floating-hidden">&#181;check</span> 
+		<i class="material-icons">check</i>
+	</a> 
+	<a href="#"
+	   onclick="$('#lsload8').popup('open');"
+           class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-secondary" 
+           data-title="step 1: Load files..."> 
+		<span class="pmd-floating-hidden">Load</span>
+		<i class="material-icons">arrow_upward</i>
+	</a> 
+
 	<a href="javascript:void(0);"
            class="pmd-floating-action-btn btn btn-md pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary pmd-z-depth-5" 
            data-title="Quick Menu"> 
 		<span class="pmd-floating-hidden">Primary</span>
-		<i class="material-icons pmd-md">build</i> 
+		<i class="material-icons pmd-md">more_vert</i> 
 	</a> 
 </div>
 
