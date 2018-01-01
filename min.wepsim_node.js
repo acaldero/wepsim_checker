@@ -121,16 +121,13 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
      * @param {integer} ins_limit - The limit of instructions to be executed
      * @param {integer} clk_limit - The limit of clock cycles per instruction
      */
-    function wepsim_core_execute ( ins_limit, clk_limit )
+    function wepsim_core_execute_asm_and_firmware ( ins_limit, clk_limit )
     {
 	var ret = new Object() ;
 	    ret.error = false ;
 	    ret.msg   = "" ;
 
         // execute firmware-assembly
-        wepsim_core_init() ;
-	wepsim_core_reset() ;
-
 	var reg_pc        = get_value(sim_states["REG_PC"]) ;
 	var reg_pc_before = get_value(sim_states["REG_PC"]) - 4 ;
 
@@ -205,65 +202,6 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
         return wepsim_checkreport2txt(checkresults.result) ;
     }
 
-
-    // 
-    // 
-    // 
-
-    function wepsim_core_execute_asm_and_firmware ( ins_limit, clk_limit )
-    {
-	var ret = new Object() ;
-	    ret.error = false ;
-	    ret.msg   = "" ;
-
-        // execute firmware-assembly
-        init("","","","","") ;
-	reset() ;
-
-	var reg_pc        = sim_states["REG_PC"].value ;
-	var reg_pc_before = sim_states["REG_PC"].value - 4 ;
-
-	var code_begin  = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
-	      code_begin = parseInt(segments['.text'].begin) ;
-	var code_end    = 0 ;
-	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].end   != "undefined") )
-	      code_end = parseInt(segments['.text'].end) ;
-
-	var kcode_begin = 0 ;
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].begin != "undefined") )
-	      kcode_begin = parseInt(segments['.ktext'].begin) ;
-	var kcode_end   = 0 ;
-	if ( (typeof segments['.ktext'] != "undefined") && (typeof segments['.ktext'].end   != "undefined") )
-	      kcode_end = parseInt(segments['.ktext'].end) ;
-
-	var ins_executed = 0 ; 
-	while (
-                     (reg_pc != reg_pc_before)  &&
-                  ( ((reg_pc <  code_end) && (reg_pc >=  code_begin)) ||
-                    ((reg_pc < kcode_end) && (reg_pc >= kcode_begin)) )
-              )
-	{
-	       ret = execute_microprogram(clk_limit) ;
-               if (false == ret.ok) {
-		   return ret ;
-	       }
-
-	       ins_executed++ ; 
-               if (ins_executed > ins_limit) 
-	       {
-	           ret.error = true ;
-	           ret.msg   = "more than " + ins_limit + " instructions executed before application ends.";
-		   return ret ;
-	       }
-
-	       reg_pc_before = reg_pc ;
-	       reg_pc = sim_states["REG_PC"].value ;
-	}
-
-        return ret ;
-    }
-
 /*
  *  Copyright 2015-2018 Felix Garcia Carballeira, Alejandro Calderon Mateos, Javier Prieto Cepeda, Saul Alonso Monsalve
  *
@@ -317,7 +255,10 @@ var tutorials=new Object();tutorials.welcome=new Object();tutorials.simpleusage=
 	}
 
 	// 4) execute firmware-assembly
-	ret = wepsim_core_execute(max_instructions, max_cycles) ;
+	wepsim_core_init() ;
+	wepsim_core_reset() ;
+
+	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
 	if (true == ret.error) 
 	{
             ret1.msg = "ERROR: cannot execute the assembly and firmware.\n" ;

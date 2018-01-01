@@ -227,6 +227,9 @@
 	update_memories(SIMWARE) ;
 
         // execute firmware-assembly
+	init("","","","","") ;
+	reset() ;
+
         var cycles_limit = 1024 ;
         var instructions_limit = 1000 ;
         var ret = wepsim_core_execute_asm_and_firmware(instructions_limit, cycles_limit) ;
