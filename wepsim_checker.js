@@ -27,6 +27,9 @@
     {
         var self = this ;
 
+        self.CFG_cycles_limit       = ko.observable(1000) ;
+        self.CFG_instructions_limit = ko.observable(1024) ;
+
         self.asm_test  = ko.observableArray([]) ;
         self.addAsm    = function(a,b) {
                             this.asm_test.push({ name:a, content:b }) ;
@@ -227,12 +230,11 @@
 	update_memories(SIMWARE) ;
 
         // execute firmware-assembly
-	init("","","","","") ;
-	reset() ;
+	wepsim_core_init() ;
+	wepsim_core_reset() ;
 
-        var cycles_limit = 1024 ;
-        var instructions_limit = 1000 ;
-        var ret = wepsim_core_execute_asm_and_firmware(instructions_limit, cycles_limit) ;
+        var ret = wepsim_core_execute_asm_and_firmware(model.CFG_instructions_limit(),
+						       model.CFG_cycles_limit()) ;
 
         // compare with expected results
         var obj_current = wepsim_current2state();
