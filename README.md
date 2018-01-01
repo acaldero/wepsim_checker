@@ -2,12 +2,16 @@
 
 [![Build Status](https://travis-ci.org/acaldero/wepsim_checker.svg?branch=master)](https://travis-ci.org/acaldero/wepsim_checker)
 
++ WepSIM Checker Source Code:
+
+   * https://github.com/acaldero/wepsim_checker
+   * GNU Lesser General Public License version 3
+
+
 + Get WepSIM Checker:
 
-   * (on-line) Web version (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, and Apple Safari 10+): <br/>
-     * Development version: https://acaldero.github.io/wepsim_checker
-
-   * WepSIM repository: https://github.com/acaldero/wepsim_checker
+   * on-line => Web version (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, and Apple Safari 10+): <br/>
+     * Nightly build: https://acaldero.github.io/wepsim_checker
 
 + Quick Start:
 
