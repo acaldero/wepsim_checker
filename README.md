@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/acaldero/wepsim_checker.svg?branch=master)](https://travis-ci.org/acaldero/wepsim_checker)
 [![Maintainability](https://api.codeclimate.com/v1/badges/eff866ffd7bfc364f8e9/maintainability)](https://codeclimate.com/github/acaldero/wepsim_checker/maintainability)
+ [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
 + WepSIM Checker Source Code:
 
