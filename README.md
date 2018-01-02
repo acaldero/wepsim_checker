@@ -1,6 +1,7 @@
 # WepSIM Checker
 
 [![Build Status](https://travis-ci.org/acaldero/wepsim_checker.svg?branch=master)](https://travis-ci.org/acaldero/wepsim_checker)
+[![Maintainability](https://api.codeclimate.com/v1/badges/eff866ffd7bfc364f8e9/maintainability)](https://codeclimate.com/github/acaldero/wepsim_checker/maintainability)
 
 + WepSIM Checker Source Code:
 
