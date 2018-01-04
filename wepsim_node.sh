@@ -11,7 +11,7 @@
    {
        console.log('') ;
        console.log('WepSIM-lite 0.5') ;
-       console.log('+ Simplified version of the wepsim simulator for the Linux command line.') ;
+       console.log('+ Simplified version of the wepsim simulator for the command line.') ;
        console.log('') ;
        console.log('Usage:') ;
        console.log('+ ./wepsim_node.sh check <microcode file> <assembly file> <checklist file>') ;
