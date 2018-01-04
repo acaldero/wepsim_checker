@@ -207,24 +207,22 @@
         model.mresults()[i].RUC("0");
 
         // load assembly
-	var SIMWAREaddon = simlang_compile(assemblies_arr[j].content, SIMWARE);
-        model.mresults()[i].EF[j] = JSON.stringify(SIMWAREaddon, null, 2);
+        ret = wepsim_core_compile_assembly(assemblies_arr[j].content) ;
+        model.mresults()[i].EF[j] = JSON.stringify(ret.simware, null, 2);
         model.mresults()[i].RE()[j]("0");
-	if (SIMWAREaddon.error != null)
-	{
+        if (false == ret.ok)
+        {
                 model.mresults()[i].RE()[j]("1");
-                add_comment(i, 
+                add_comment(i,
                             "assembly error on " + assemblies_arr[j].name,
-                            SIMWAREaddon.error.split("(*)")[1], 
-                            SIMWAREaddon.error);
+                            ret.msg.split("(*)")[1],
+                            ret.msg);
 
                 setTimeout(function() {
                               execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1);
                            }, 100);
                 return;
-	}
-	set_simware(SIMWAREaddon) ;
-	update_memories(SIMWARE) ;
+        }
 
         // execute firmware-assembly
 	wepsim_core_reset() ;
