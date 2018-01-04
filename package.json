@@ -7,7 +7,7 @@
     "jshint": "^2.6.0"
   },
   "scripts": {
-    "test": "node wepsim_node.sh ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt"
+    "test": "node wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt"
   },
   "dependencies": {
   }
