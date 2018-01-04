@@ -197,7 +197,10 @@
         if (false == ret.ok)
 	{
               model.mresults()[i].RUC("1");
-              add_comment(i, "firmware error", ret.msg.split("(*)")[1], ret.msg);
+              add_comment(i, 
+                          "firmware error", 
+                          ret.msg.split("(*)")[1], 
+                          ret.msg);
 
               setTimeout(function() {
                            execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1) ;
@@ -247,7 +250,8 @@
                         ret.msg + "<br>", 
                         ret.msg);
 
-            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + JSON.stringify(obj_result.result, null, 2);
+            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + 
+                                        JSON.stringify(obj_result.result, null, 2);
             model.mresults()[i].RX()[j](obj_result.errors + 1);
         }
         else
@@ -266,9 +270,9 @@
     {
         // initialize
 	wepsim_core_init() ;
-	var SIMWARE = get_simware() ;
 
         // loop over firmwares, execute the asm code over it
+	var SIMWARE = get_simware() ;
         execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, 0, 0) ;
     }
 
