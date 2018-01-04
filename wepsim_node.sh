@@ -14,7 +14,7 @@
        console.log('+ Simplified version of the wepsim simulator for the command line.') ;
        console.log('') ;
        console.log('Usage:') ;
-       console.log('+ ./wepsim_node.sh check <microcode file> <assembly file> <checklist file>') ;
+       console.log('+ ./wepsim_node.sh check <microcode file> <assembly file> <checklist file> [max. instructions] [max. cycles]') ;
        console.log('') ;
        console.log('Examples:') ;
        console.log('./wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt') ;
@@ -35,8 +35,17 @@
        var data_asmcode   = fs.readFileSync(process.argv[4], 'utf8') ;
        var data_okresult  = fs.readFileSync(process.argv[5], 'utf8') ;
 
+       cfg_instruction_limit = 1000 ;
+       if (process.argv.length > 6)
+           cfg_instruction_limit = parseInt(process.argv[6]) ;
+
+       cfg_cycles_limit = 1024 ;
+       if (process.argv.length > 7)
+           cfg_cycles_limit = parseInt(process.argv[7]) ;
+
        ws.wepsim_nodejs_init() ;
-       var ret = ws.wepsim_nodejs_check(data_microcode, data_asmcode, data_okresult, 1000, 1024) ;
+       var ret = ws.wepsim_nodejs_check(data_microcode, data_asmcode, data_okresult, 
+                                        cfg_instruction_limit, cfg_cycles_limit) ;
        if (false == ret.ok) 
        {
            console.log(ret.msg);
