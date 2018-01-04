@@ -260,7 +260,7 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
 	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
 	if (true == ret.error) 
 	{
-            ret1.msg = "ERROR: Execution: cannot execute the assembly and firmware.\n" ;
+            ret1.msg = "ERROR: Execution: " + ret.msg + ".\n" ;
             ret1.ok = false ;
 	    return ret1 ;
 	}
