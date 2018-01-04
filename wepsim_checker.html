@@ -214,12 +214,14 @@
 
 <div data-role="panel" id="actions_panel"
      data-display="overlay" data-animate="false" data-position="right" data-theme="a"
-     style="width:19em; min-width:18em;">
+     style="width:21em; min-width:19em;">
 
         <table border="0" height="100%" width="100%">
         <tr height="8%">
         <td align="left">
-            <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-left">Close</a>
+            <a href="#" class="ui-btn-left"
+               data-rel="back" data-role="button" data-theme="b" 
+               data-icon="delete" data-iconpos="notext">Close</a>
         </td>
         </tr>
 
@@ -227,14 +229,21 @@
         <td valign="top">
 
       <ol id="listview_2" data-role="listview" data-inset="true" data-theme="a" data-divider-theme="b">
+
             <li><h1>Microcodes</h1>
-                <input type="file" id="filesToLoadb" multiple/></li>
+                <label class="btn btn-default" for="filesToLoadb" style="padding:0 0 0 0;">
+                <input type="file" id="filesToLoadb" multiple /></li>
+                </label>
 
 	    <li><h1>Assembly file</h1>
-		<input type="file" id="fileToLoad3b" multiple/></li>
+                <label class="btn btn-default" for="fileToLoad3b" style="padding:0 0 0 0;">
+		<input type="file" id="fileToLoad3b" multiple /></li>
+                </label>
 
 	    <li><h1>Checklist file</h1>
-		<input type="file" id="fileToLoad5b" multiple/></li>
+                <label class="btn btn-default" for="fileToLoad5b" style="padding:0 0 0 0;">
+		<input type="file" id="fileToLoad5b" multiple /></li>
+                </label>
 
 	    <li><a href="#" style="background-color: lightgray"
 	           onclick="wt_load_files('filesToLoadb', 'fileToLoad3b', 'fileToLoad5b');"
@@ -284,7 +293,7 @@
 		<div style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 16px; line-height: 24px; padding-bottom: 6.4px; padding-left: 8px; padding-right: 8px; padding-top: 6.4px; max-width: 90vw;">
 		<div class="row">
 		<div class="col-xs-12 col-sm-12">
-		    Copyright &copy; 2015-2017 <br>
+		    Copyright &copy; 2015-2018 <br>
 		    <p>
 
 		    <a href="#" 
