@@ -57,6 +57,8 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
 	if ('webmips' != mode) {
             compute_general_behavior("CLOCK") ;
 	}
+
+        set_screen_content("") ;
     }
 
     /**

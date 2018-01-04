@@ -57,6 +57,8 @@
 	if ('webmips' != mode) {
             compute_general_behavior("CLOCK") ;
 	}
+
+        set_screen_content("") ;
     }
 
     /**
