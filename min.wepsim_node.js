@@ -66,17 +66,19 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
     function wepsim_core_compile_firmware ( textToMCompile )
     {
 	var ret = new Object() ;
-	    ret.msg = "" ;
-	    ret.ok  = true ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
 
-	var preSM = load_firmware(textToMCompile) ;
+	var preSM = loadFirmware(textToMCompile) ;
+	ret.simware = preSM ;
 	if (preSM.error != null)
         {
-            ret.msg = preSM.error ;
-            ret.ok  = false ;
+            ret.msg     = preSM.error ;
+            ret.ok      = false ;
             return ret ;
         }
 
+        update_memories(preSM);
 	wepsim_core_reset() ;
         return ret ;
     }
