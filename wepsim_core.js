@@ -66,17 +66,19 @@
     function wepsim_core_compile_firmware ( textToMCompile )
     {
 	var ret = new Object() ;
-	    ret.msg = "" ;
-	    ret.ok  = true ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
 
-	var preSM = load_firmware(textToMCompile) ;
+	var preSM = loadFirmware(textToMCompile) ;
+	ret.simware = preSM ;
 	if (preSM.error != null)
         {
-            ret.msg = preSM.error ;
-            ret.ok  = false ;
+            ret.msg     = preSM.error ;
+            ret.ok      = false ;
             return ret ;
         }
 
+        update_memories(preSM);
 	wepsim_core_reset() ;
         return ret ;
     }
@@ -95,13 +97,14 @@
         var SIMWARE = get_simware() ;
 	if (SIMWARE.firmware.length == 0)
         {
-            ret.msg = 'WARNING: please load the microcode first.' ;
+            ret.msg = 'Empty microcode, please load the microcode first.' ;
             ret.ok  = false;
             return ret;
 	}
 
         // compile Assembly and show message
         var SIMWAREaddon = simlang_compile(textToCompile, SIMWARE);
+	ret.simware = SIMWAREaddon ;
         if (SIMWAREaddon.error != null)
         {
             ret.msg = SIMWAREaddon.error ;
@@ -113,6 +116,7 @@
         set_simware(SIMWAREaddon) ;
 	update_memories(SIMWARE) ;
 	wepsim_core_reset() ;
+
         return ret ;
     }
 
@@ -181,8 +185,6 @@
 	var data3_bin   = wepsim_checklist2state(checklist_ok) ;
 	var obj_current = wepsim_current2state();
 	var obj_result  = wepsim_check_results(data3_bin, obj_current, true) ;
-
-	// console.log(JSON.stringify(obj_result.result, null, 2));
 
         return obj_result ;
     }

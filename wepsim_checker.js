@@ -186,55 +186,51 @@
             return;
         }
         if (typeof checklist_bin_arr[j] == "undefined") {
-	    return show_popup1_content('CheckList', '<br><pre>ERROR: Each assembly code needs its associated checklist.</pre><br>') ;
+	    return show_popup1_content('CheckList', 
+                               '<br><pre>ERROR: Each assembly code needs its associated checklist.</pre><br>');
         }
 
         // load firmware
 	var ifirm = model.mfiles()[i].content;
-	var preSM = loadFirmware(ifirm);
-        model.mresults()[i].BF = JSON.stringify(preSM);
-	if (preSM.error != null)
+        var ret   = wepsim_core_compile_firmware(ifirm) ;
+        model.mresults()[i].BF = JSON.stringify(ret.simware);
+        if (false == ret.ok)
 	{
-                model.mresults()[i].RUC("1");
-                add_comment(i, 
-                            "firmware error",
-                            preSM.error.split("(*)")[1], 
-                            preSM.error);
+              model.mresults()[i].RUC("1");
+              add_comment(i, 
+                          "firmware error", 
+                          ret.msg.split("(*)")[1], 
+                          ret.msg);
 
-                setTimeout(function() {
-                             execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1);
-                           }, 100);
-                return;
+              setTimeout(function() {
+                           execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1) ;
+                         }, 100);
+              return;
 	}
         model.mresults()[i].RUC("0");
-        update_memories(preSM);
 
-        // load assemblyi 
-	var SIMWAREaddon = simlang_compile(assemblies_arr[j].content, SIMWARE);
-        model.mresults()[i].EF[j] = JSON.stringify(SIMWAREaddon, null, 2);
+        // load assembly
+        ret = wepsim_core_compile_assembly(assemblies_arr[j].content) ;
+        model.mresults()[i].EF[j] = JSON.stringify(ret.simware, null, 2);
         model.mresults()[i].RE()[j]("0");
-	if (SIMWAREaddon.error != null)
-	{
+        if (false == ret.ok)
+        {
                 model.mresults()[i].RE()[j]("1");
-                add_comment(i, 
+                add_comment(i,
                             "assembly error on " + assemblies_arr[j].name,
-                            SIMWAREaddon.error.split("(*)")[1], 
-                            SIMWAREaddon.error);
+                            ret.msg.split("(*)")[1],
+                            ret.msg);
 
                 setTimeout(function() {
                               execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, i, j+1);
                            }, 100);
                 return;
-	}
-	set_simware(SIMWAREaddon) ;
-	update_memories(SIMWARE) ;
+        }
 
         // execute firmware-assembly
-	wepsim_core_init() ;
 	wepsim_core_reset() ;
-
-        var ret = wepsim_core_execute_asm_and_firmware(model.CFG_instructions_limit(),
-						       model.CFG_cycles_limit()) ;
+        ret = wepsim_core_execute_asm_and_firmware(model.CFG_instructions_limit(),
+						   model.CFG_cycles_limit()) ;
 
         // compare with expected results
         var obj_current = wepsim_current2state();
@@ -254,7 +250,8 @@
                         ret.msg + "<br>", 
                         ret.msg);
 
-            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + JSON.stringify(obj_result.result, null, 2);
+            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + 
+                                        JSON.stringify(obj_result.result, null, 2);
             model.mresults()[i].RX()[j](obj_result.errors + 1);
         }
         else
@@ -271,10 +268,11 @@
 
     function execute_firmwares_and_asm ( checklist_bin_arr, assemblies_arr )
     {
-        // get the simware
-	var SIMWARE = get_simware() ;
+        // initialize
+	wepsim_core_init() ;
 
         // loop over firmwares, execute the asm code over it
+	var SIMWARE = get_simware() ;
         execute_firmwares_and_asm_ij(SIMWARE, checklist_bin_arr, assemblies_arr, 0, 0) ;
     }
 
