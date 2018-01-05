@@ -8,10 +8,10 @@
 
    * https://github.com/acaldero/wepsim_checker
 
-+ Get WepSIM Checker:
++ WepSIM Checker:
 
-   * on-line => Web (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, and Apple Safari 10+): <br/>
-     * Nightly build: https://acaldero.github.io/wepsim_checker
+   * on-line => Web (Google Chrome 50+, Mozilla Firefox 50+, Microsoft Edge 25+, Apple Safari 10+, etc.): <br/>
+     * https://acaldero.github.io/wepsim_checker
 
 + Quick Start:
 
