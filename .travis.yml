@@ -1,9 +1,10 @@
 
-language: node_js
+language: bash
 
-node_js:
-  - "node"
-
-before_install:
+before_script:
   - npm install jshint
+  - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
+
+script:
+  - bash mk_test.sh
 

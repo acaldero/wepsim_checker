@@ -53,6 +53,7 @@
            // throw 'ERROR...' ;
        }
 
+       console.log("OK: Execution: no error reported");
        return true ;
    }
 
