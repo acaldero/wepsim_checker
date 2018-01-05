@@ -2,16 +2,16 @@
 #set -x
 
 test_example_ok() {
-  node wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt > /tmp/k1
-  nlines=$(grep OK /tmp/k1 | wc -l)
-  assertNotEquals "Failure in the correct example :-(" '1' "${nlines}"
+  node wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt > kk1
+  nlines=$(grep "ERROR:" kk1 | wc -l)
+  assertSame "In the correct example :-("   '0' "${nlines}"
 }
 
 test_example_ko() {
-  node wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_2.txt > /tmp/k1
-  nlines=$(grep ERROR /tmp/k1 | wc -l)
-  assertNotEquals "Failure in the incorrect example :-(" '1' "${nlines}"
+  node wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_2.txt > kk1
+  nlines=$(grep "OK:" kk1 | wc -l)
+  assertSame "In the incorrect example :-(" '0' "${nlines}"
 }
 
-. shunit2-2.1.6/src/shunit2
+. shunit2-2.0.3/src/shell/shunit2
 
