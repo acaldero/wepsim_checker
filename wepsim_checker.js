@@ -250,15 +250,19 @@
                         ret.msg + "<br>", 
                         ret.msg);
 
-            model.mresults()[i].XF[j] = "<pre>ERROR: " + ret.msg + "</pre><br>" + 
-                                        JSON.stringify(obj_result.result, null, 2);
-            model.mresults()[i].RX()[j](obj_result.errors + 1);
+            diff = {} ;
+	    diff.expected  = "no errors" ;
+	    diff.obtained  = ret.msg ;
+	    diff.fulfill   = false ;
+	    diff.elto_type = "runtime" ;
+	    diff.elto_id   = "execution" ;
+	    diff.elto_op   = "==" ;
+
+	    obj_result.result.push(diff) ;
+            obj_result.errors += 1;
         }
-        else
-        {
-            model.mresults()[i].XF[j] = JSON.stringify(obj_result.result, null, 2);
-            model.mresults()[i].RX()[j](obj_result.errors);
-        }
+        model.mresults()[i].XF[j] = JSON.stringify(obj_result.result, null, 2);
+        model.mresults()[i].RX()[j](obj_result.errors);
 
         // next firmware
         setTimeout(function() { 
