@@ -13,5 +13,5 @@ test_example_ko() {
   assertNotEquals "Failure in the incorrect example :-(" '1' "${nlines}"
 }
 
-. shunit2-2.1.6/src/shunit2
+. ./shunit2-2.1.6/src/shunit2
 
