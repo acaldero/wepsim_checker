@@ -130,8 +130,8 @@
     function wepsim_core_execute_asm_and_firmware ( ins_limit, clk_limit )
     {
 	var ret = new Object() ;
-	    ret.error = false ;
-	    ret.msg   = "" ;
+	    ret.ok  = true ;
+	    ret.msg = "" ;
 
         // execute firmware-assembly
 	var reg_pc        = get_value(sim_states["REG_PC"]) ;
@@ -166,8 +166,8 @@
 	       ins_executed++ ; 
                if (ins_executed > ins_limit) 
 	       {
-	           ret.error = true ;
-	           ret.msg   = "more than " + ins_limit + " instructions executed before application ends.";
+	           ret.ok  = false ;
+	           ret.msg = "more than " + ins_limit + " instructions executed before application ends.";
 		   return ret ;
 	       }
 

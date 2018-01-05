@@ -243,7 +243,7 @@
                         wepsim_checkreport2html(obj_result.result, true)) ;
         }
 
-        if (ret.error == true)
+        if (false == ret.ok)
         {
             add_comment(i, 
                         "execution error on " + assemblies_arr[j].name,
