@@ -191,7 +191,7 @@
 				                var col = parseInt(this.getAttribute('data_index_col'));
                                                 show_checklist_result(row, col);"
 				       data-position-to='windows' data-transition='none'
-				       style="color:blue;"><div data-bind="text: $data">NONE</div></span>
+				       style="color:blue;"><div data-bind="text: $root.mresults()[$parentContext.$index()].RX()[$index()]">NONE</div></span>
 				</td>
 		    <!-- /ko -->
 				<td>
