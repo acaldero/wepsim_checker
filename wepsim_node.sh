@@ -19,6 +19,7 @@
        console.log('Examples:') ;
        console.log('./wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_3.txt') ;
        console.log('./wepsim_node.sh check ./examples/microcode_3.txt ./examples/code_3.txt ./examples/checklist_2.txt') ;
+       console.log('./wepsim_node.sh run   ./examples/microcode_3.txt ./examples/code_3.txt') ;
        console.log('') ;
 
        return true ;
@@ -55,6 +56,32 @@
 
        console.log("OK: Execution: no error reported");
        return true ;
+   }
+
+
+   //
+   // action == run
+   //
+
+   if ("RUN" == process.argv[2].toUpperCase())
+   {
+       var data_microcode = fs.readFileSync(process.argv[3], 'utf8') ;
+       var data_asmcode   = fs.readFileSync(process.argv[4], 'utf8') ;
+
+       cfg_instruction_limit = 1000 ;
+       if (process.argv.length > 5)
+           cfg_instruction_limit = parseInt(process.argv[5]) ;
+
+       cfg_cycles_limit = 1024 ;
+       if (process.argv.length > 6)
+           cfg_cycles_limit = parseInt(process.argv[6]) ;
+
+       ws.wepsim_nodejs_init() ;
+       var ret = ws.wepsim_nodejs_run(data_microcode, data_asmcode, cfg_instruction_limit, cfg_cycles_limit) ;
+
+       console.log(ret.msg);
+       return ret.ok ;
+       // if (ret.ok == false) throw 'ERROR...' ;
    }
 
 

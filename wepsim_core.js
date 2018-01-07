@@ -19,10 +19,14 @@
  */
 
     /**
-     * Initialize WepSIM core
+     * Initialize WepSIM core.
      */
     function wepsim_core_init ( )
     {
+	var ret = {} ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
+
         reset_cfg() ;
         stop_drawing() ;
 
@@ -30,13 +34,19 @@
         compile_behaviors() ;
         firedep_to_fireorder(jit_fire_dep) ;
         compute_references() ;
+
+        return ret ;
     }
 
     /**
-     * Reset the WepSIM simulation
+     * Reset the WepSIM simulation.
      */
     function wepsim_core_reset ( )
     {
+	var ret = {} ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
+
 	var SIMWARE = get_simware() ;
         compute_general_behavior("RESET") ;
 
@@ -59,15 +69,17 @@
 	}
 
         set_screen_content("") ;
+
+        return ret ;
     }
 
     /**
-     * Compile Firmware
+     * Compile Firmware.
      * @param {string} textToMCompile - The firmware to be compile and loaded into memory
      */
     function wepsim_core_compile_firmware ( textToMCompile )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.msg     = "" ;
 	    ret.ok      = true ;
 
@@ -86,12 +98,12 @@
     }
 
     /**
-     * Compile Assembly
+     * Compile Assembly.
      * @param {string} textToCompile - The assembly to be compile and loaded into memory
      */
     function wepsim_core_compile_assembly ( textToCompile )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.msg = "" ;
 	    ret.ok  = true ;
 
@@ -123,13 +135,13 @@
     }
 
     /**
-     * Execute the assembly previously compiled and loaded
+     * Execute the assembly previously compiled and loaded.
      * @param {integer} ins_limit - The limit of instructions to be executed
      * @param {integer} clk_limit - The limit of clock cycles per instruction
      */
     function wepsim_core_execute_asm_and_firmware ( ins_limit, clk_limit )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.ok  = true ;
 	    ret.msg = "" ;
 
@@ -179,30 +191,58 @@
     }
 
     /**
-     * Check that the current state meets the specifications
-     * @param {object} checklist_ok - Correct state specifications
+     * Check that the current state meets the specifications, and return the differences.
+     * @param {object} checklist_ok - Correct state specifications (text)
+     * @param {boolean} newones_too - True if new elements are not ignored
      */
-    function wepsim_core_check_results ( checklist_ok )
+    function wepsim_core_show_checkresults ( checklist_ok, newones_too )
     {
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
+
 	var data3_bin   = wepsim_checklist2state(checklist_ok) ;
 	var obj_current = wepsim_current2state();
-	var obj_result  = wepsim_check_results(data3_bin, obj_current, true) ;
+	var obj_result  = wepsim_check_results(data3_bin, obj_current, newones_too ) ;
 
-        return obj_result ;
+        ret.msg  = wepsim_checkreport2txt(obj_result.result) ;
+        ret.html = wepsim_checkreport2html(obj_result.result, true) ;
+        ret.ok   = (0 == obj_result.errors) ;
+        return ret ;
     }
 
     /**
-     * Check that the current state meets the specifications
-     * @param {object}  checkresults - Results checked
-     * @param {string}  show_format - "HTML" or "txt"
-     * @param {boolean} show_onlyerrors - True if only errors has to been shown
+     * Check that the current state meets the specifications, and return the differences.
+     * @param {object} checklist_ok - Correct state specifications (bin)
+     * @param {boolean} newones_too - True if new elements are not ignored
      */
-    function wepsim_core_show_checkresults ( checkresults, show_format, show_onlyerrors )
+    function wepsim_core_show_checkresults_bin ( checklist_ok, newones_too )
     {
-	if (show_format.toUpperCase() == "HTML") {
-            return wepsim_checkreport2html(checkresults, show_onlyerrors) ;
-	}
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
 
-        return wepsim_checkreport2txt(checkresults.result) ;
+	var obj_current = wepsim_current2state();
+	var obj_result  = wepsim_check_results(checklist_ok, obj_current, newones_too) ;
+
+        ret.msg  = wepsim_checkreport2txt(obj_result.result) ;
+        ret.html = wepsim_checkreport2html(obj_result.result, true) ;
+        ret.ok   = (0 == obj_result.errors) ;
+        return ret ;
+    }
+
+    /**
+     * Show the current state.
+     */
+    function wepsim_core_show_currentstate ( )
+    {
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
+
+        var state_obj = wepsim_current2state() ;
+              ret.msg = wepsim_state2checklist(state_obj) ;
+
+        return ret ;
     }
 
