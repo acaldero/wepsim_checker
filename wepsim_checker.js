@@ -36,7 +36,7 @@
                          } ;
 
         self.checklist     = ko.observableArray([]) ;
-	self.checklist_bin = new Array() ;
+	self.checklist_bin = [] ;
         self.addCheck  = function(a,b) {
                             var c = wepsim_checklist2state(b) ;
                             this.checklist.push({ name:a, content:b }) ;
@@ -68,6 +68,8 @@
 
     function wt_load_files ( id_mc, id_asm, id_checklst )
     {
+            var i = 0;
+
 	    var mfiles1 = document.getElementById(id_mc).files;
 	    var mfiles2 = document.getElementById(id_asm).files;
 	    var mfiles3 = document.getElementById(id_checklst).files;
@@ -76,13 +78,13 @@
             model.mfiles.removeAll();
             model.asm_test.removeAll();
             model.checklist.removeAll();
-            model.checklist_bin = new Array();
+            model.checklist_bin = [];
 
             // results
-	    for (var i=0; i<mfiles1.length; i++)
+	    for (i=0; i<mfiles1.length; i++)
             {
-                 var f = new Array() ;
-                 var h = new Array() ;
+                 var f = [] ;
+                 var h = [] ;
 	         for (var j=0; j<mfiles2.length; j++) 
 	         {
 		      f.push(ko.observable('NONE'));
@@ -97,13 +99,13 @@
 				 f,
 				 new Array(''),
 				 h,
-				 new Array(),
+				 [],
 				 'NONE') ;
 	    }
 
 	    // microcode
-	    var fileReader1 = new Array();
-	    for (var i=0; i<mfiles1.length; i++)
+	    var fileReader1 = [];
+	    for (i=0; i<mfiles1.length; i++)
             {
 		 fileReader1[i] = new FileReader();
 		 fileReader1[i].index  = i;
@@ -116,8 +118,8 @@
 	    }
 
 	    // assembly
-	    var fileReader2 = new Array();
-	    for (var i=0; i<mfiles2.length; i++)
+	    var fileReader2 = [];
+	    for (i=0; i<mfiles2.length; i++)
             {
 	        fileReader2[i] = new FileReader();
 	        fileReader2[i].index = i;
@@ -129,8 +131,8 @@
             }
 
 	    // checklist
-	    var fileReader3 = new Array();
-	    for (var i=0; i<mfiles3.length; i++)
+	    var fileReader3 = [];
+	    for (i=0; i<mfiles3.length; i++)
             {
 	        fileReader3[i] = new FileReader();
 	        fileReader3[i].index = i;
@@ -370,7 +372,7 @@
                     "</div>" ;
             show_popup1_content('Assembly', o) ;
 
-            for (skey in asm.seg)
+            for (var skey in asm.seg)
             {
                  $("#compile_begin_" + skey).html("0x" + asm.seg[skey].begin.toString(16));
                  $("#compile_end_"   + skey).html("0x" + asm.seg[skey].end.toString(16));

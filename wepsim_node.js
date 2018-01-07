@@ -60,7 +60,7 @@
 	}
 
 	// 5) compare with expected results
-        var ret = wepsim_core_show_checkresults(str_resultok, false) ;
+        ret = wepsim_core_show_checkresults(str_resultok, false) ;
 	if (false == ret.ok)
 	{
             ret1.msg = "ERROR: Execution: different results: " + ret.msg + "\n" ;
