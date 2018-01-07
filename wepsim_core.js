@@ -50,17 +50,17 @@
 	var SIMWARE = get_simware() ;
         compute_general_behavior("RESET") ;
 
-        if ((typeof segments['.ktext'] != "undefined") && (SIMWARE.labels2["kmain"])){
-                    set_value(sim_states["REG_PC"], parseInt(SIMWARE.labels2["kmain"]));
+        if ((typeof segments['.ktext'] != "undefined") && (SIMWARE.labels2.kmain)){
+                    set_value(sim_states.REG_PC, parseInt(SIMWARE.labels2.kmain));
 	}
-        else if ((typeof segments['.text'] != "undefined") && (SIMWARE.labels2["main"])){
-                    set_value(sim_states["REG_PC"], parseInt(SIMWARE.labels2["main"]));
+        else if ((typeof segments['.text'] != "undefined") && (SIMWARE.labels2.main)){
+                    set_value(sim_states.REG_PC, parseInt(SIMWARE.labels2.main));
 	}
 
 	if ( (typeof segments['.stack'] != "undefined") &&
-             (typeof sim_states["BR"][FIRMWARE.stackRegister] != "undefined") )
+             (typeof sim_states.BR[FIRMWARE.stackRegister] != "undefined") )
 	{
-		set_value(sim_states["BR"][FIRMWARE.stackRegister], parseInt(segments['.stack'].begin));
+		set_value(sim_states.BR[FIRMWARE.stackRegister], parseInt(segments['.stack'].begin));
 	}
 
 	var mode = get_cfg('ws_mode');
@@ -146,8 +146,8 @@
 	    ret.msg = "" ;
 
         // execute firmware-assembly
-	var reg_pc        = get_value(sim_states["REG_PC"]) ;
-	var reg_pc_before = get_value(sim_states["REG_PC"]) - 4 ;
+	var reg_pc        = get_value(sim_states.REG_PC) ;
+	var reg_pc_before = get_value(sim_states.REG_PC) - 4 ;
 
 	var code_begin  = 0 ;
 	if ( (typeof segments['.text'] != "undefined") && (typeof segments['.text'].begin != "undefined") )
@@ -184,7 +184,7 @@
 	       }
 
 	       reg_pc_before = reg_pc ;
-	       reg_pc = get_value(sim_states["REG_PC"]) ;
+	       reg_pc = get_value(sim_states.REG_PC) ;
 	}
 
         return ret ;
