@@ -52,7 +52,7 @@
 
 	// 4) execute firmware-assembly
 	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
-	if (true == ret.error) 
+	if (false == ret.ok) 
 	{
             ret1.msg = "ERROR: Execution: " + ret.msg + ".\n" ;
             ret1.ok = false ;
@@ -60,15 +60,58 @@
 	}
 
 	// 5) compare with expected results
-        var result1 = wepsim_core_check_results(str_resultok) ;
-	var report1 = wepsim_core_show_checkresults(result1, "text", true) ;
-	if (result1.errors != 0) 
+        var ret = wepsim_core_show_checkresults(str_resultok, false) ;
+	if (false == ret.ok)
 	{
-            ret1.msg = "ERROR: Execution: different results: " + report1 + "\n" ;
+            ret1.msg = "ERROR: Execution: different results: " + ret.msg + "\n" ;
             ret1.ok = false ;
 	    return ret1 ;
         }
 
+	return ret1 ;
+    }
+
+    function wepsim_nodejs_run ( str_firmware, str_assembly, max_instructions, max_cycles )
+    {
+        var ret1 = {} ;
+            ret1.ok = true ;
+            ret1.msg = "" ;
+
+	// 1) initialize ws
+        wepsim_core_reset() ;
+
+	// 2) load firmware
+        var ret = wepsim_core_compile_firmware(str_firmware) ;
+	if (false == ret.ok) 
+	{
+            ret1.msg = "ERROR: Firmware: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 3) load assembly
+        ret = wepsim_core_compile_assembly(str_assembly) ;
+	if (false == ret.ok) 
+        {
+            ret1.msg = "ERROR: Assembly: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 4) execute firmware-assembly
+	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
+	if (false == ret.ok) 
+	{
+            ret1.msg = "ERROR: Execution: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 5) show the current state
+        ret = wepsim_core_show_currentstate() ;
+
+        ret1.msg = "OK: Execution: " + ret.msg ;
+        ret1.ok = true ;
 	return ret1 ;
     }
 
@@ -77,6 +120,7 @@
      * Export API
      */
 
-    module.exports.wepsim_nodejs_init   = wepsim_core_init ;
-    module.exports.wepsim_nodejs_check  = wepsim_nodejs_check ;
+    module.exports.wepsim_nodejs_init  = wepsim_core_init ;
+    module.exports.wepsim_nodejs_check = wepsim_nodejs_check ;
+    module.exports.wepsim_nodejs_run   = wepsim_nodejs_run ;
 

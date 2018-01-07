@@ -19,10 +19,14 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
  */
 
     /**
-     * Initialize WepSIM core
+     * Initialize WepSIM core.
      */
     function wepsim_core_init ( )
     {
+	var ret = {} ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
+
         reset_cfg() ;
         stop_drawing() ;
 
@@ -30,13 +34,19 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
         compile_behaviors() ;
         firedep_to_fireorder(jit_fire_dep) ;
         compute_references() ;
+
+        return ret ;
     }
 
     /**
-     * Reset the WepSIM simulation
+     * Reset the WepSIM simulation.
      */
     function wepsim_core_reset ( )
     {
+	var ret = {} ;
+	    ret.msg     = "" ;
+	    ret.ok      = true ;
+
 	var SIMWARE = get_simware() ;
         compute_general_behavior("RESET") ;
 
@@ -59,15 +69,17 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
 	}
 
         set_screen_content("") ;
+
+        return ret ;
     }
 
     /**
-     * Compile Firmware
+     * Compile Firmware.
      * @param {string} textToMCompile - The firmware to be compile and loaded into memory
      */
     function wepsim_core_compile_firmware ( textToMCompile )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.msg     = "" ;
 	    ret.ok      = true ;
 
@@ -86,12 +98,12 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
     }
 
     /**
-     * Compile Assembly
+     * Compile Assembly.
      * @param {string} textToCompile - The assembly to be compile and loaded into memory
      */
     function wepsim_core_compile_assembly ( textToCompile )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.msg = "" ;
 	    ret.ok  = true ;
 
@@ -123,13 +135,13 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
     }
 
     /**
-     * Execute the assembly previously compiled and loaded
+     * Execute the assembly previously compiled and loaded.
      * @param {integer} ins_limit - The limit of instructions to be executed
      * @param {integer} clk_limit - The limit of clock cycles per instruction
      */
     function wepsim_core_execute_asm_and_firmware ( ins_limit, clk_limit )
     {
-	var ret = new Object() ;
+	var ret = {} ;
 	    ret.ok  = true ;
 	    ret.msg = "" ;
 
@@ -179,31 +191,59 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
     }
 
     /**
-     * Check that the current state meets the specifications
-     * @param {object} checklist_ok - Correct state specifications
+     * Check that the current state meets the specifications, and return the differences.
+     * @param {object} checklist_ok - Correct state specifications (text)
+     * @param {boolean} newones_too - True if new elements are not ignored
      */
-    function wepsim_core_check_results ( checklist_ok )
+    function wepsim_core_show_checkresults ( checklist_ok, newones_too )
     {
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
+
 	var data3_bin   = wepsim_checklist2state(checklist_ok) ;
 	var obj_current = wepsim_current2state();
-	var obj_result  = wepsim_check_results(data3_bin, obj_current, true) ;
+	var obj_result  = wepsim_check_results(data3_bin, obj_current, newones_too ) ;
 
-        return obj_result ;
+        ret.msg  = wepsim_checkreport2txt(obj_result.result) ;
+        ret.html = wepsim_checkreport2html(obj_result.result, true) ;
+        ret.ok   = (0 == obj_result.errors) ;
+        return ret ;
     }
 
     /**
-     * Check that the current state meets the specifications
-     * @param {object}  checkresults - Results checked
-     * @param {string}  show_format - "HTML" or "txt"
-     * @param {boolean} show_onlyerrors - True if only errors has to been shown
+     * Check that the current state meets the specifications, and return the differences.
+     * @param {object} checklist_ok - Correct state specifications (bin)
+     * @param {boolean} newones_too - True if new elements are not ignored
      */
-    function wepsim_core_show_checkresults ( checkresults, show_format, show_onlyerrors )
+    function wepsim_core_show_checkresults_bin ( checklist_ok, newones_too )
     {
-	if (show_format.toUpperCase() == "HTML") {
-            return wepsim_checkreport2html(checkresults, show_onlyerrors) ;
-	}
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
 
-        return wepsim_checkreport2txt(checkresults.result) ;
+	var obj_current = wepsim_current2state();
+	var obj_result  = wepsim_check_results(checklist_ok, obj_current, newones_too) ;
+
+        ret.msg  = wepsim_checkreport2txt(obj_result.result) ;
+        ret.html = wepsim_checkreport2html(obj_result.result, true) ;
+        ret.ok   = (0 == obj_result.errors) ;
+        return ret ;
+    }
+
+    /**
+     * Show the current state.
+     */
+    function wepsim_core_show_currentstate ( )
+    {
+	var ret = {} ;
+	    ret.msg = "" ;
+	    ret.ok  = true ;
+
+        var state_obj = wepsim_current2state() ;
+              ret.msg = wepsim_state2checklist(state_obj) ;
+
+        return ret ;
     }
 
 /*
@@ -260,7 +300,7 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
 
 	// 4) execute firmware-assembly
 	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
-	if (true == ret.error) 
+	if (false == ret.ok) 
 	{
             ret1.msg = "ERROR: Execution: " + ret.msg + ".\n" ;
             ret1.ok = false ;
@@ -268,15 +308,58 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
 	}
 
 	// 5) compare with expected results
-        var result1 = wepsim_core_check_results(str_resultok) ;
-	var report1 = wepsim_core_show_checkresults(result1, "text", true) ;
-	if (result1.errors != 0) 
+        var ret = wepsim_core_show_checkresults(str_resultok, false) ;
+	if (false == ret.ok)
 	{
-            ret1.msg = "ERROR: Execution: different results: " + report1 + "\n" ;
+            ret1.msg = "ERROR: Execution: different results: " + ret.msg + "\n" ;
             ret1.ok = false ;
 	    return ret1 ;
         }
 
+	return ret1 ;
+    }
+
+    function wepsim_nodejs_run ( str_firmware, str_assembly, max_instructions, max_cycles )
+    {
+        var ret1 = {} ;
+            ret1.ok = true ;
+            ret1.msg = "" ;
+
+	// 1) initialize ws
+        wepsim_core_reset() ;
+
+	// 2) load firmware
+        var ret = wepsim_core_compile_firmware(str_firmware) ;
+	if (false == ret.ok) 
+	{
+            ret1.msg = "ERROR: Firmware: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 3) load assembly
+        ret = wepsim_core_compile_assembly(str_assembly) ;
+	if (false == ret.ok) 
+        {
+            ret1.msg = "ERROR: Assembly: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 4) execute firmware-assembly
+	ret = wepsim_core_execute_asm_and_firmware(max_instructions, max_cycles) ;
+	if (false == ret.ok) 
+	{
+            ret1.msg = "ERROR: Execution: " + ret.msg + ".\n" ;
+            ret1.ok = false ;
+	    return ret1 ;
+	}
+
+	// 5) show the current state
+        ret = wepsim_core_show_currentstate() ;
+
+        ret1.msg = "OK: Execution: " + ret.msg ;
+        ret1.ok = true ;
 	return ret1 ;
     }
 
@@ -285,6 +368,7 @@ var tutorials={};tutorials.welcome={};tutorials.simpleusage={};tutorials.welcome
      * Export API
      */
 
-    module.exports.wepsim_nodejs_init   = wepsim_core_init ;
-    module.exports.wepsim_nodejs_check  = wepsim_nodejs_check ;
+    module.exports.wepsim_nodejs_init  = wepsim_core_init ;
+    module.exports.wepsim_nodejs_check = wepsim_nodejs_check ;
+    module.exports.wepsim_nodejs_run   = wepsim_nodejs_run ;
 
