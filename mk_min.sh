@@ -63,17 +63,15 @@ cat external/bootstrap.v4.min.css \
 #  wepsim_checker engine
 # 
 cat wepsim_core.js \
-    wepsim_checker.js > sim_checker_all.js
-/usr/bin/yui-compressor -o min.sim_checker.js sim_checker_all.js
-rm -fr sim_checker_all.js
+    wepsim_checker.js > wepsim_checker_all.js
+/usr/bin/yui-compressor -o min.wepsim_checker.js wepsim_checker_all.js
+rm -fr wepsim_checker_all.js
 
 # 
 #  wepsim_node engine
 # 
-cat min.sim_info.js \
-    min.sim_hw.js \
-    min.sim_all.js \
-    min.wepsim.js \
+cat min.sim_all.js \
+    min.wepsim_all.js \
     wepsim_core.js \
     wepsim_node.js > min.wepsim_node.js
 
