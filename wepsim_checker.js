@@ -194,7 +194,7 @@
 
         // load firmware
 	var ifirm = model.mfiles()[i].content;
-        var ret   = wepsim_core_compile_firmware(ifirm) ;
+        var ret   = sim_core_compile_firmware(ifirm) ;
         model.mresults()[i].BF = JSON.stringify(ret.simware);
         if (false == ret.ok)
 	{
@@ -212,7 +212,7 @@
         model.mresults()[i].RUC("0");
 
         // load assembly
-        ret = wepsim_core_compile_assembly(assemblies_arr[j].content) ;
+        ret = sim_core_compile_assembly(assemblies_arr[j].content) ;
         model.mresults()[i].EF[j] = JSON.stringify(ret.simware, null, 2);
         model.mresults()[i].RE()[j]("0");
         if (false == ret.ok)
@@ -230,9 +230,8 @@
         }
 
         // execute firmware-assembly
-	wepsim_core_reset() ;
-        ret = wepsim_core_execute_asm_and_firmware(model.CFG_instructions_limit(),
-						   model.CFG_cycles_limit()) ;
+	sim_core_reset() ;
+        ret = sim_core_execute_program(model.CFG_instructions_limit(), model.CFG_cycles_limit()) ;
 
         // compare with expected results
         var obj_current = wepsim_current2state();
@@ -275,7 +274,7 @@
     function execute_firmwares_and_asm ( checklist_bin_arr, assemblies_arr )
     {
         // initialize
-	wepsim_core_init() ;
+	sim_core_init() ;
 
         // loop over firmwares, execute the asm code over it
 	var SIMWARE = get_simware() ;
