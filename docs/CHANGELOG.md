@@ -1,5 +1,10 @@
 
 2.0.5 -> 2.0.10:
+* Sync with WepSIM 1.8.7
+* Initial support for command-line wepsim checker
+* Max. instruction/clock cycles added
+
+2.0.5 -> 2.0.10:
 * Editable Assembly test and checklist
 * 'Load microcode' has been integrated into the 'File name'
 * From 'wepsim-tester' to 'wepsim-checker'
