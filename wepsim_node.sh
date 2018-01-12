@@ -44,7 +44,7 @@
        if (process.argv.length > 7)
            cfg_cycles_limit = parseInt(process.argv[7]) ;
 
-       ws.wepsim_nodejs_init('', '', '', '', '') ;
+       ws.wepsim_nodejs_init(false) ;
        var ret = ws.wepsim_nodejs_check(data_microcode, data_asmcode, data_okresult, 
                                         cfg_instruction_limit, cfg_cycles_limit) ;
        if (false == ret.ok) 
@@ -76,7 +76,7 @@
        if (process.argv.length > 6)
            cfg_cycles_limit = parseInt(process.argv[6]) ;
 
-       ws.wepsim_nodejs_init('', '', '', '', '') ;
+       ws.wepsim_nodejs_init(false) ;
        var ret = ws.wepsim_nodejs_run(data_microcode, data_asmcode, cfg_instruction_limit, cfg_cycles_limit) ;
 
        console.log(ret.msg);

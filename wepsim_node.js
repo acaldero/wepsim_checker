@@ -23,6 +23,12 @@
      * WepSIM nodejs aux.
      */
 
+    function wepsim_nodejs_init ( )
+    {
+         sim_core_init(false) ;
+	 sim_core_init_panel('', '', '', '', '') ;
+    }
+
     function wepsim_nodejs_show_checkresults ( checklist_ok, newones_too )
     {
 	var ret = {} ;
@@ -64,7 +70,7 @@
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset(false) ;
+        sim_core_reset() ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;
@@ -112,7 +118,7 @@
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset(false) ;
+        sim_core_reset() ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;
@@ -154,7 +160,7 @@
      * Export API
      */
 
-    module.exports.wepsim_nodejs_init  = sim_core_init ;
+    module.exports.wepsim_nodejs_init  = wepsim_nodejs_init ;
     module.exports.wepsim_nodejs_check = wepsim_nodejs_check ;
     module.exports.wepsim_nodejs_run   = wepsim_nodejs_run ;
 
