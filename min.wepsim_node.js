@@ -64,7 +64,7 @@ var WSCFG={};WSCFG.version={value:"1.8.7",type:"string"};function get_cfg(a){ret
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset() ;
+        sim_core_reset(false) ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;
@@ -112,7 +112,7 @@ var WSCFG={};WSCFG.version={value:"1.8.7",type:"string"};function get_cfg(a){ret
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset() ;
+        sim_core_reset(false) ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;

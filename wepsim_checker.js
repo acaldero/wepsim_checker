@@ -230,7 +230,7 @@
         }
 
         // execute firmware-assembly
-	sim_core_reset() ;
+	sim_core_reset(false) ;
         ret = sim_core_execute_program(model.CFG_instructions_limit(), model.CFG_cycles_limit()) ;
 
         // compare with expected results
@@ -274,7 +274,7 @@
     function execute_firmwares_and_asm ( checklist_bin_arr, assemblies_arr )
     {
         // initialize
-	sim_core_init() ;
+	sim_core_init('', '', '', '', '') ;
 
         // loop over firmwares, execute the asm code over it
 	var SIMWARE = get_simware() ;
