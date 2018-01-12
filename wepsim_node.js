@@ -64,7 +64,7 @@
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset() ;
+        sim_core_reset(false) ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;
@@ -112,7 +112,7 @@
             ret1.msg = "" ;
 
 	// 1) initialize ws
-        sim_core_reset() ;
+        sim_core_reset(false) ;
 
 	// 2) load firmware
         var ret = sim_core_compile_firmware(str_firmware) ;
