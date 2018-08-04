@@ -38,7 +38,7 @@
         self.checklist     = ko.observableArray([]) ;
 	self.checklist_bin = [] ;
         self.addCheck  = function(a,b) {
-                            var c = wepsim_checklist2state(b) ;
+                            var c = simstate_checklist2state(b) ;
                             this.checklist.push({ name:a, content:b }) ;
                             this.checklist_bin.push({ name:a, content:c }) ;
                          } ;
@@ -234,14 +234,14 @@
         ret = sim_core_execute_program(model.CFG_instructions_limit(), model.CFG_cycles_limit()) ;
 
         // compare with expected results
-        var obj_current = wepsim_current2state();
-        var obj_result  = wepsim_check_results(checklist_bin_arr[j].content, obj_current, false) ;
+        var obj_current = simstate_current2state();
+        var obj_result  = simstate_check_results(checklist_bin_arr[j].content, obj_current, false) ;
         if (obj_result.errors != 0)
         {
             add_comment(i,
                         "execution error on " + assemblies_arr[j].name,
-                        wepsim_checkreport2txt(obj_result.result),
-                        wepsim_checkreport2html(obj_result.result, true)) ;
+                        simstate_checkreport2txt(obj_result.result),
+                        simstate_checkreport2html(obj_result.result, true)) ;
         }
 
         if (false == ret.ok)
@@ -274,7 +274,8 @@
     function execute_firmwares_and_asm ( checklist_bin_arr, assemblies_arr )
     {
         // initialize
-	sim_core_init('', '', '', '', '') ;
+	sim_core_init(false) ;
+        simhw_setActive(0) ;
 
         // loop over firmwares, execute the asm code over it
 	var SIMWARE = get_simware() ;
@@ -346,10 +347,13 @@
     function show_asm_result ( index_i, index_j )
     {
 	    var asm_json = '' ;
-	    if (typeof model.mresults()[index_i] != "undefined")
-	        asm_json = model.mresults()[index_i].EF[index_j] ;
-	    if (asm_json == '')
+	    if ( (typeof model.mresults()[index_i]             != "undefined") &&
+	         (typeof model.mresults()[index_i].EF[index_j] != "undefined") ) {
+	          asm_json = model.mresults()[index_i].EF[index_j] ;
+            }
+	    if (asm_json == '') {
 	        return show_popup1_content('Assembly', '<h1>Empty.</h1>') ;
+            }
 
 	    var asm = JSON.parse(asm_json) ;
 	    if (asm.error != null)
@@ -393,7 +397,7 @@
 			                 '<input type=hidden id="todo2" ' + 
 			                 '       value="var nval = $(\'#content\').val(); ' + 
 			                 '              model.checklist()[' + index + '].content = nval; ' + 
-			                 '              model.checklist_bin[' + index + '].content = wepsim_checklist2state(nval);">' + 
+			                 '              model.checklist_bin[' + index + '].content = simstate_checklist2state(nval);">' + 
 			                 '<textarea class="form-control" ' + 
 			                 '          id="content" ' + 
 			                 '          style="overflow:auto;">' + checklist + '</textarea>' +
@@ -405,18 +409,22 @@
     function show_checklist_result ( index_i, index_j )
     {
 	    var chcklst_json = '' ;
-	    if (typeof model.mresults()[index_i] != "undefined")
-	        chcklst_json = model.mresults()[index_i].XF[index_j] ;
-	    if (chcklst_json == '')
+	    if ( (typeof model.mresults()[index_i]             != "undefined") &&
+	         (typeof model.mresults()[index_i].XF[index_j] != "undefined") ) {
+	          chcklst_json = model.mresults()[index_i].XF[index_j] ;
+            }
+	    if (chcklst_json == '') {
 	        return show_popup1_content('Checklist', '<h1>Empty.</h1>') ;
+            }
 
 	    var chcklst = JSON.parse(chcklst_json) ;
-	    if (chcklst.error != null)
+	    if (chcklst.error != null) {
 	        return show_popup1_content('Checklist', '<br><pre>' + chcklst.error + '</pre><br>') ;
+            }
 
 	    show_popup1_content('Checklist', 'Loading, please wait...') ;
             setTimeout(function() {
-			    var content = wepsim_checkreport2html(chcklst, false) ;
+			    var content = simstate_checkreport2html(chcklst, false) ;
 			    show_popup1_content('Checklist', content) ;
                        }, 50);
     }

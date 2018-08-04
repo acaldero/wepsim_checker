@@ -66,10 +66,3 @@ cat wepsim_checker.js > wepsim_checker_all.js
 /usr/bin/yui-compressor -o min.wepsim_checker.js wepsim_checker_all.js
 rm -fr wepsim_checker_all.js
 
-# 
-#  wepsim_node engine
-# 
-cat min.sim_all.js \
-    min.wepsim_all.js \
-    wepsim_node.js > min.wepsim_node.js
-
