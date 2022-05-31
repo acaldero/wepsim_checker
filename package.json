@@ -1,0 +1,19 @@
+{
+  "name": "wepsim_checker-travisci",
+  "description": "Check wepsim_checker",
+  "author": "acaldero@inf.uc3m.es",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acaldero/wepsim_checker.git"
+  },
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "jshint": "^2.13.3",
+    "terser": "^4.8.0"
+  },
+  "dependencies": {
+    "clear": "^0.1.0",
+    "yargs": "^15.4.1"
+  }
+}
