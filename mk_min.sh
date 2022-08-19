@@ -63,6 +63,7 @@ cat external/bootstrap.v4.min.css \
 #  wepsim_checker engine
 # 
 cat wepsim_checker.js > wepsim_checker_all.js
-/usr/bin/yui-compressor -o min.wepsim_checker.js wepsim_checker_all.js
+ /usr/bin/yui-compressor      -o min.wepsim_checker.js wepsim_checker_all.js
+#/usr/local/bin/yuicompressor -o min.wepsim_checker.js wepsim_checker_all.js
 rm -fr wepsim_checker_all.js
 
